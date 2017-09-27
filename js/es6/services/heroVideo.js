@@ -17,7 +17,7 @@ export function initHeroVideo() {
 
 function scaleVideoContainer() {
 
-    const height = $(window).height() + 5;
+    const height = $(window).height();
     const unitHeight = parseInt(height) + 'px';
     $('.homepage-hero-module').css('height',unitHeight);
 

@@ -1,5 +1,6 @@
 import { initHeroVideo } from './services/heroVideo';
 import Typed from 'typed.js';
+import * as Ripple from 'proper-ripple';
 import '../../styles/main.less';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,4 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     initHeroVideo();
+
+    Ripple.default.watch('.btn-ripple');
 });
