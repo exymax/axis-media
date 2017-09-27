@@ -1,3 +1,4 @@
+import { initHeroVideo } from './services/heroVideo';
 import Typed from 'typed.js';
 import '../../styles/main.less';
 
@@ -11,4 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
         typeSpeed: 40,
         loop: true,
     });
+
+    initHeroVideo();
 });

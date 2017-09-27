@@ -4,23 +4,54 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
-    <div id="main-container">
-        <div id="header">
-            <div id="logo-container">Axis Media</div>
-            <div id="nav-container">
-                <ul id="nav">
-                    <li><a>Portfolio</a></li>
-                    <li><a>Team</a></li>
-                    <li><a>About</a></li>
-                    <li><a>Contacts</a></li>
-                </ul>
-            </div>
+    <body>
+    <div class="homepage-hero-module">
+        <div class="video-container">
+            <div class="filter"></div>
+            <video autoplay loop class="fillWidth">
+                <source src="media/working_space.mp4" type="video/mp4" />Your browser does not support the video tag. I suggest you upgrade your browser.
+                <source src="media/working_space.webm" type="video/webm" />Your browser does not support the video tag. I suggest you upgrade your browser.
+            </video>
         </div>
+    </div>
+
+    <div id="main-container">
+        <!--<div id="header">-->
+            <!--<div id="logo-container">Axis Media</div>-->
+            <!--<div id="nav-container">-->
+                <!--<ul id="nav">-->
+                    <!--<li><a href="#">Portfolio</a></li>-->
+                    <!--<li><a href="#">Team</a></li>-->
+                    <!--<li><a href="#">About</a></li>-->
+                    <!--<li><a href="#">Contacts</a></li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</div>-->
 
         <div id="content-container">
+            <div id="company-hero-title"><h1>We're Axis Media</h1></div>
             <div id="company-direction-hero">
                 We create things that <span id="typed-wrapper"></span>
+            </div>
+            <button class="btn btn-large btn-blue" id="order-product-button">Заказать проект</button>
+        </div>
+
+        <div id="directions">
+            <div class="direction web">
+                <img src="images/web_development.png">
+                <p>Web Development</p>
+            </div>
+            <div class="direction android">
+                <img src="images/android_development.png">
+                <p>Android Development</p>
+            </div>
+            <div class="direction visualization">
+                <img src="images/visualization.png">
+                <p>Architectural Visualization</p>
+            </div>
+            <div class="direction design">
+                <img src="images/design.png">
+                <p>Design</p>
             </div>
         </div>
     </div>
