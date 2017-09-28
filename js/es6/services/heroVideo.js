@@ -13,6 +13,10 @@ export function initHeroVideo() {
         scaleBannerVideoSize('.video-container .filter');
         scaleBannerVideoSize('.video-container video');
     });
+
+    $('.direction').click(() => {
+        $('.video-main').toggleClass('video-top-animation');
+    });
 }
 
 function scaleVideoContainer() {

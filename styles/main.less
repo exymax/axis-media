@@ -12,13 +12,14 @@
 
 .btn {
     cursor: pointer;
-    padding: 8px 13px;
+    padding: 10px 15px;
     border-radius: 2px;
     text-align: center;
     text-transform: uppercase;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
     border: none;
     outline: none;
+    font-size: 16px;
     font-weight: bold;
     color: #fff;
 
@@ -51,6 +52,14 @@
     &:hover {
         background-color: #e74c3c;
     }
+}
+
+.video-container {
+    transition: .6s all cubic-bezier(.25,.96,.57,1);
+}
+
+.video-top-animation {
+    margin-top: -48.3%;
 }
 
 body {
@@ -93,7 +102,7 @@ body {
                         margin-right: 25px;
 
                         a {
-                            font-size: 17px;
+                            font-size: 16px;
                             text-decoration: none;
                             text-transform: uppercase;
                             color: #fff;
@@ -132,7 +141,7 @@ body {
 
         #directions {
             position: fixed;
-            padding: 20px 0;
+            padding: 20px 0 10px 0;
             width: 100%;
             left: 0;
             bottom: 0;
@@ -142,7 +151,7 @@ body {
             flex-grow: 1;
             align-items: center;
             justify-content: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
 
             .direction {
                 position: relative;
