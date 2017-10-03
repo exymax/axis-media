@@ -2,6 +2,10 @@ import { initHeroVideo } from './services/heroVideo';
 import Typed from 'typed.js';
 import * as Ripple from 'proper-ripple';
 import '../../styles/main.less';
+import 'slick-carousel/slick/slick.less';
+
+import $ from 'jquery';
+import 'slick-carousel';
 
 document.addEventListener('DOMContentLoaded', () => {
     const typed = new Typed('#typed-wrapper', {
@@ -17,4 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeroVideo();
 
     Ripple.default.watch('.btn-ripple');
+
+    $('#clients').slick({
+        infinite: true,
+        slidesToShow: 3,
+        slidesToScroll: 3,
+    });
 });

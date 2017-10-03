@@ -31,6 +31,7 @@
     "img-loader": "^2.0.0",
     "jquery": "^3.2.1",
     "proper-ripple": "^0.4.4",
+    "slick-carousel": "^1.7.1",
     "typed.js": "^2.0.6",
     "url-loader": "^0.5.9"
   }

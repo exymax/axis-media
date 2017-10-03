@@ -52,7 +52,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
     border: none;
     outline: none;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     color: #fff;
 
@@ -108,15 +108,21 @@ body {
             position: absolute;
             top: 0;
             left: 0;
-            width: calc(~"100% - 90px");
+            width: calc(~"100% - 100px");
             line-height: 50px;
-            padding: 20px 45px;
+            padding: 20px 50px;
 
             #logo-container {
                 color: #fff;
                 float: left;
                 font-size: 25px;
                 font-weight: bold;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+
+                #company-logo {
+                    width: 20px;
+                    height: 20px;
+                }
             }
 
             #nav-container {
@@ -143,7 +149,7 @@ body {
         #content-container {
             position: absolute;
             width: 100%;
-            top: 30%;
+            top: 37%;
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 35px;
@@ -152,11 +158,6 @@ body {
             justify-content: center;
             align-items: center;
             color: #fff;
-
-            #company-logo {
-                width: 150px;
-                height: 150px;
-            }
 
             #company-hero-title {
                 text-shadow: 0 1px 2px rgba(0, 0, 0, .2);
@@ -171,7 +172,7 @@ body {
     #directions-container {
         position: relative;
         width: 100%;
-        height: 500px;
+        height: 150px;
         background-color: rgb(240, 240, 240);
 
         #directions {
@@ -195,11 +196,17 @@ body {
                 align-items: center;
                 flex-direction: column;
                 position: relative;
+                min-width: 150px;
                 padding: 0 35px 12px 35px;
                 text-align: center;
                 cursor: pointer;
                 color: rgb(30, 30, 30);
+                border-right: 1px solid rgb(200, 200, 200);
                 .transition;
+
+                &:last-child {
+                    border: none;
+                }
 
                 img {
                     width: 48px;
@@ -242,6 +249,51 @@ body {
                     &.design .bottom-line {
                         background-color: #f1c40f;
                     }
+                }
+            }
+        }
+    }
+
+    #clients-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+        height: 550px;
+        background-color: rgb(240, 240, 240);
+
+        #clients-header {
+            width: 100%;
+            text-align: center;
+            margin-top: 60px;
+            font-size: 30px;
+            color: rgb(50, 50, 50);
+            padding: 10px 0;
+        }
+
+        #clients {
+            margin-top: 40px;
+            overflow: hidden;
+            width: 70%;
+            display: flex;
+            flex-direction: row;
+
+            .slick-arrow {
+                border: none;
+                background: transparent;
+            }
+
+            .client {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                margin-right: 35px;
+
+                img {
+                    width: 120px;
+                    height: 120px;
                 }
             }
         }
