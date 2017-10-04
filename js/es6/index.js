@@ -24,7 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $('#clients').slick({
         infinite: true,
-        slidesToShow: 3,
-        slidesToScroll: 3,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        prevArrow: '<button class="slick-control slick-prev"><div class="inner-arrow left"></div><button>',
+        nextArrow: '<button class="slick-control slick-next"><div class="inner-arrow right"></div><button>',
+    });
+
+    $('#client-reviews').slick({
+        infinite: true,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        prevArrow: '<button class="slick-control slick-prev"><div class="inner-arrow left"></div><button>',
+        nextArrow: '<button class="slick-control slick-next"><div class="inner-arrow right"></div><button>',
     });
 });
