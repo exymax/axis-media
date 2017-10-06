@@ -10940,28 +10940,36 @@ var _properRipple = __webpack_require__(8);
 
 var Ripple = _interopRequireWildcard(_properRipple);
 
-__webpack_require__(15);
+var _scrollParallax = __webpack_require__(15);
 
-__webpack_require__(25);
+var _scrollParallax2 = _interopRequireDefault(_scrollParallax);
+
+__webpack_require__(17);
+
+__webpack_require__(19);
 
 var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-__webpack_require__(27);
+__webpack_require__(21);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 document.addEventListener('DOMContentLoaded', function () {
-    var typed = new _typed2.default('#typed-wrapper', {
-        strings: ['are awesome', 'are simple', 'will not blow your mind by its cost'],
-        typeSpeed: 40,
-        loop: true
-    });
+    // const typed = new Typed('#typed-wrapper', {
+    //     strings: [
+    //         'are awesome',
+    //         'are simple',
+    //         'will not blow your mind by its cost',
+    //     ],
+    //     typeSpeed: 40,
+    //     loop: true,
+    // });
 
-    (0, _heroVideo.initHeroVideo)();
+    var parallax = new _scrollParallax2.default('.parallax').init();
 
     Ripple.default.watch('.btn-ripple');
 
@@ -12442,8 +12450,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../css-loader/index.js!../../less-loader/dist/cjs.js!./ripple.css", function() {
-			var newContent = require("!!../../css-loader/index.js!../../less-loader/dist/cjs.js!./ripple.css");
+		module.hot.accept("!!../../css-loader/index.js??ref--1-1!../../less-loader/dist/cjs.js!./ripple.css", function() {
+			var newContent = require("!!../../css-loader/index.js??ref--1-1!../../less-loader/dist/cjs.js!./ripple.css");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -12565,10 +12573,593 @@ module.exports = function (css) {
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
+// use here your library name
+module.exports = __webpack_require__(16)
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [module], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else if (typeof exports !== "undefined") {
+    factory(module);
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory(mod);
+    global.Parallax = mod.exports;
+  }
+})(this, function (module) {
+  'use strict';
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var _createClass = function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  }();
+
+  function $$(selector, ctx) {
+    var els;
+    if (typeof selector == 'string') els = (ctx || document).querySelectorAll(selector);else els = selector;
+    return Array.prototype.slice.call(els);
+  }
+
+  function extend(src) {
+    var obj = void 0,
+        args = arguments;
+    for (var i = 1; i < args.length; ++i) {
+      if (obj = args[i]) {
+        for (var key in obj) {
+          src[key] = obj[key];
+        }
+      }
+    }
+    return src;
+  }
+
+  function isUndefined(val) {
+    return typeof val == 'undefined';
+  }
+
+  function toCamel(string) {
+    return string.replace(/-(\w)/g, function (_, c) {
+      return c.toUpperCase();
+    });
+  }
+
+  function elementData(el, attr) {
+    if (attr) return el.dataset[attr] || el.getAttribute('data-' + attr);else return el.dataset || Array.prototype.slice.call(el.attributes).reduce(function (ret, attribute) {
+      if (/data-/.test(attribute.name)) ret[toCamel(attribute.name)] = attribute.value;
+      return ret;
+    }, {});
+  }
+
+  function prefix(obj, prop) {
+    var prefixes = ['ms', 'o', 'Moz', 'webkit'];
+    var i = prefixes.length;
+    while (i--) {
+      var _prefix = prefixes[i],
+          p = _prefix ? _prefix + prop[0].toUpperCase() + prop.substr(1) : prop.toLowerCase() + prop.substr(1);
+      if (p in obj) {
+        return p;
+      }
+    }
+    return '';
+  }
+
+  var observable = function observable(el) {
+
+    el = el || {};
+
+    var callbacks = {},
+        slice = Array.prototype.slice;
+
+    Object.defineProperties(el, {
+      on: {
+        value: function value(event, fn) {
+          if (typeof fn == 'function') (callbacks[event] = callbacks[event] || []).push(fn);
+          return el;
+        },
+        enumerable: false,
+        writable: false,
+        configurable: false
+      },
+
+      off: {
+        value: function value(event, fn) {
+          if (event == '*' && !fn) callbacks = {};else {
+            if (fn) {
+              var arr = callbacks[event];
+              for (var i = 0, cb; cb = arr && arr[i]; ++i) {
+                if (cb == fn) arr.splice(i--, 1);
+              }
+            } else delete callbacks[event];
+          }
+          return el;
+        },
+        enumerable: false,
+        writable: false,
+        configurable: false
+      },
+
+      one: {
+        value: function value(event, fn) {
+          function on() {
+            el.off(event, on);
+            fn.apply(el, arguments);
+          }
+          return el.on(event, on);
+        },
+        enumerable: false,
+        writable: false,
+        configurable: false
+      },
+
+      trigger: {
+        value: function value(event) {
+          var arglen = arguments.length - 1,
+              args = new Array(arglen),
+              fns,
+              fn,
+              i;
+
+          for (i = 0; i < arglen; i++) {
+            args[i] = arguments[i + 1];
+          }
+
+          fns = slice.call(callbacks[event] || [], 0);
+
+          for (i = 0; fn = fns[i]; ++i) {
+            fn.apply(el, args);
+          }
+
+          if (callbacks['*'] && event != '*') el.trigger.apply(el, ['*', event].concat(args));
+
+          return el;
+        },
+        enumerable: false,
+        writable: false,
+        configurable: false
+      }
+    });
+
+    return el;
+  };
+
+  var rAF = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame || function (cb) {
+    setTimeout(cb, 1000 / 60);
+  };
+  var RESIZE_DELAY = 20;
+
+  var Stage = function () {
+    function Stage() {
+      _classCallCheck(this, Stage);
+
+      observable(this);
+      this.resizeTimer = null;
+      this.tick = false;
+      this.bind();
+    }
+
+    _createClass(Stage, [{
+      key: 'bind',
+      value: function bind() {
+        var _this = this;
+
+        window.addEventListener('scroll', function () {
+          return _this.scroll();
+        }, true);
+        window.addEventListener('mousewheel', function () {
+          return _this.scroll();
+        }, true);
+        window.addEventListener('touchmove', function () {
+          return _this.scroll();
+        }, true);
+        window.addEventListener('resize', function () {
+          return _this.resize();
+        }, true);
+        window.addEventListener('orientationchange', function () {
+          return _this.resize();
+        }, true);
+        window.onload = function () {
+          return _this.scroll();
+        };
+
+        return this;
+      }
+    }, {
+      key: 'scroll',
+      value: function scroll() {
+        var _this2 = this;
+
+        if (this.tick) return this;
+        this.tick = !this.tick;
+        rAF(function () {
+          return _this2.update();
+        });
+        return this;
+      }
+    }, {
+      key: 'update',
+      value: function update() {
+        this.trigger('scroll', this.scrollTop);
+        this.tick = !this.tick;
+        return this;
+      }
+    }, {
+      key: 'resize',
+      value: function resize() {
+        var _this3 = this;
+
+        if (this.resizeTimer) clearTimeout(this.resizeTimer);
+        this.resizeTimer = setTimeout(function () {
+          return _this3.trigger('resize', _this3.size);
+        }, RESIZE_DELAY);
+        return this;
+      }
+    }, {
+      key: 'scrollTop',
+      get: function get() {
+        var top = (window.pageYOffset || document.scrollTop) - (document.clientTop || 0);
+        return window.isNaN(top) ? 0 : top;
+      }
+    }, {
+      key: 'height',
+      get: function get() {
+        return window.innerHeight;
+      }
+    }, {
+      key: 'width',
+      get: function get() {
+        return window.innerWidth;
+      }
+    }, {
+      key: 'size',
+      get: function get() {
+        return {
+          width: this.width,
+          height: this.height
+        };
+      }
+    }]);
+
+    return Stage;
+  }();
+
+  var TRANSFORM_PREFIX = function (div) {
+    return prefix(div.style, 'transform');
+  }(document.createElement('div'));
+  var HAS_MATRIX = function (div) {
+    div.style[TRANSFORM_PREFIX] = 'matrix(1, 0, 0, 1, 0, 0)';
+    return (/matrix/g.test(div.style.cssText)
+    );
+  }(document.createElement('div'));
+
+  var Canvas = function () {
+    function Canvas(img, opts) {
+      _classCallCheck(this, Canvas);
+
+      observable(this);
+      this.opts = opts;
+      this.img = img;
+      this.wrapper = img.parentNode;
+      this.isLoaded = false;
+    }
+
+    _createClass(Canvas, [{
+      key: 'load',
+      value: function load() {
+        var _this4 = this;
+
+        if (!this.img.width || !this.img.height || !this.img.complete) this.img.onload = function () {
+          return _this4.onImageLoaded();
+        };else this.onImageLoaded();
+
+        return this;
+      }
+    }, {
+      key: 'onImageLoaded',
+      value: function onImageLoaded() {
+        this.isLoaded = true;
+        this.update();
+        this.img.style.willChange = 'transform';
+        this.trigger('loaded', this.img);
+        return this;
+      }
+    }, {
+      key: 'update',
+      value: function update() {
+        var iw = this.img.naturalWidth || this.img.width,
+            ih = this.img.naturalHeight || this.img.height,
+            ratio = iw / ih,
+            size = this.size;
+
+        var nh = void 0,
+            nw = void 0,
+            offsetTop = void 0,
+            offsetLeft = void 0;
+
+        if (size.width / ratio <= size.height) {
+          nw = size.height * ratio;
+          nh = size.height;
+        } else {
+          nw = size.width;
+          nh = size.width / ratio;
+        }
+
+        if (nh <= size.height + size.height * this.opts.safeHeight) {
+          nw += nw * this.opts.safeHeight;
+          nh += nh * this.opts.safeHeight;
+        }
+
+        offsetTop = -~~((nh - size.height) / 2);
+        offsetLeft = -~~((nw - size.width) / 2);
+
+        this.img.width = nw;
+        this.img.height = nh;
+        this.img.style.top = offsetTop + 'px';
+        this.img.style.left = offsetLeft + 'px';
+
+        return this;
+      }
+    }, {
+      key: 'draw',
+      value: function draw(_ref) {
+        var scrollTop = _ref.scrollTop,
+            width = _ref.width,
+            height = _ref.height;
+
+        var size = this.size,
+            perc = (this.offset.top + size.height * this.opts.center + height / 2 - scrollTop) / height - 1,
+            offset = ~~(perc * (this.img.height / size.height / 2 * this.opts.intensity) * 10);
+
+        this.img.style[TRANSFORM_PREFIX] = HAS_MATRIX ? 'matrix(1,0,0,1, 0, ' + -offset + ')' : 'translate(0, ' + -offset + 'px)';
+
+        return this;
+      }
+    }, {
+      key: 'bounds',
+      get: function get() {
+        return this.wrapper.getBoundingClientRect();
+      }
+    }, {
+      key: 'offset',
+      get: function get() {
+        return {
+          top: this.wrapper.offsetTop,
+          left: this.wrapper.offsetLeft
+        };
+      }
+    }, {
+      key: 'size',
+      get: function get() {
+        var props = this.bounds;
+        return {
+          height: props.height | 0,
+          width: props.width | 0
+        };
+      }
+    }]);
+
+    return Canvas;
+  }();
+
+  var stage = void 0;
+
+  var Parallax = function () {
+    function Parallax(selector) {
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      _classCallCheck(this, Parallax);
+
+      observable(this);
+
+      this.opts = opts;
+      this.selector = selector;
+      this.canvases = [];
+      this.add(selector);
+
+      if (!stage) stage = new Stage();
+
+      return this;
+    }
+
+    _createClass(Parallax, [{
+      key: 'init',
+      value: function init() {
+
+        if (!this.canvases.length) {
+          console.warn('No images were found with the selector "' + this.selector + '"');
+        } else {
+          this.imagesLoaded = 0;
+          this.bind();
+        }
+
+        return this;
+      }
+    }, {
+      key: 'bind',
+      value: function bind() {
+        var _this5 = this;
+
+        this._onResize = function () {
+          for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          return _this5.resize.apply(_this5, args);
+        };
+        this._onScroll = function () {
+          for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+            args[_key2] = arguments[_key2];
+          }
+
+          return _this5.scroll.apply(_this5, args);
+        };
+
+        stage.on('resize', this._onResize);
+        stage.on('scroll', this._onScroll);
+
+        this.canvases.forEach(function (canvas) {
+          canvas.one('loaded', function () {
+            return _this5.onCanvasLoaded(canvas);
+          });
+          canvas.load();
+        });
+
+        return this;
+      }
+    }, {
+      key: 'refresh',
+      value: function refresh() {
+        this.onResize(stage.size).onScroll(stage.scrollTop);
+        return this;
+      }
+    }, {
+      key: 'onCanvasLoaded',
+      value: function onCanvasLoaded(canvas) {
+        this.trigger('image:loaded', canvas.img, canvas);
+        this.imagesLoaded++;
+        canvas.draw(stage);
+        if (this.imagesLoaded == this.canvases.length) this.trigger('images:loaded');
+        return this;
+      }
+    }, {
+      key: 'scroll',
+      value: function scroll(scrollTop) {
+        var offsetYBounds = this.opts.offsetYBounds,
+            _stage = stage,
+            height = _stage.height,
+            width = _stage.width;
+
+
+        var i = this.canvases.length;
+
+        while (i--) {
+          var canvas = this.canvases[i],
+              canvasHeight = canvas.size.height,
+              canvasOffset = canvas.offset;
+
+          if (canvas.isLoaded && scrollTop + stage.height + offsetYBounds > canvasOffset.top && canvasOffset.top + canvasHeight > scrollTop - offsetYBounds) {
+            canvas.draw({ height: height, scrollTop: scrollTop, width: width });
+            this.trigger('draw', canvas.img);
+          }
+        }
+
+        this.trigger('update', scrollTop);
+
+        return this;
+      }
+    }, {
+      key: 'add',
+      value: function add(els) {
+        this.canvases = this.canvases.concat(this.createCanvases($$(els)));
+        return this;
+      }
+    }, {
+      key: 'remove',
+      value: function remove(els) {
+        var _this6 = this;
+
+        $$(els).forEach(function (el) {
+          var i = _this6.canvases.length;
+          while (i--) {
+            if (el == _this6.canvases[i].img) {
+              _this6.canvases.splice(i, 1);
+              break;
+            }
+          }
+        });
+        return this;
+      }
+    }, {
+      key: 'destroy',
+      value: function destroy() {
+        this.off('*');
+        this.canvases = [];
+        stage.off('resize', this._onResize).off('scroll', this._onScroll);
+        return this;
+      }
+    }, {
+      key: 'resize',
+      value: function resize(size) {
+        var i = this.canvases.length;
+        while (i--) {
+          var canvas = this.canvases[i];
+          if (!canvas.isLoaded) return;
+          canvas.update().draw(stage);
+        }
+        this.trigger('resize');
+        return this;
+      }
+    }, {
+      key: 'createCanvases',
+      value: function createCanvases(els) {
+        var _this7 = this;
+
+        return els.map(function (el) {
+          var data = elementData(el);
+          return new Canvas(el, {
+            intensity: !isUndefined(data.intensity) ? +data.intensity : _this7.opts.intensity,
+            center: !isUndefined(data.center) ? +data.center : _this7.opts.center,
+            safeHeight: !isUndefined(data.safeHeight) ? +data.safeHeight : _this7.opts.safeHeight
+          });
+        });
+      }
+    }, {
+      key: 'opts',
+      set: function set(opts) {
+        this._defaults = {
+          offsetYBounds: 50,
+          intensity: 30,
+          center: 0.5,
+
+          safeHeight: 0.15 };
+        extend(this._defaults, opts);
+      },
+      get: function get() {
+        return this._defaults;
+      }
+    }]);
+
+    return Parallax;
+  }();
+
+  module.exports = Parallax;
+});
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(16);
+var content = __webpack_require__(18);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -12582,8 +13173,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../node_modules/css-loader/index.js!../node_modules/less-loader/dist/cjs.js!./main.less", function() {
-			var newContent = require("!!../node_modules/css-loader/index.js!../node_modules/less-loader/dist/cjs.js!./main.less");
+		module.hot.accept("!!../node_modules/css-loader/index.js??ref--1-1!../node_modules/less-loader/dist/cjs.js!./main.less", function() {
+			var newContent = require("!!../node_modules/css-loader/index.js??ref--1-1!../node_modules/less-loader/dist/cjs.js!./main.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -12593,7 +13184,7 @@ if(false) {
 }
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -12601,67 +13192,19 @@ exports = module.exports = __webpack_require__(1)(undefined);
 exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=PT+Sans:400,700&subset=cyrillic);", ""]);
 
 // module
-exports.push([module.i, ".homepage-hero-module {\n  width: 100%;\n  height: 600px;\n  overflow: hidden;\n  border-right: none;\n  border-left: none;\n}\n.no-video .video-container video,\n.touch .video-container video {\n  display: none;\n}\n.no-video .video-container .poster,\n.touch .video-container .poster {\n  display: block !important;\n}\n.video-container {\n  position: relative;\n  bottom: 0;\n  left: 0;\n  height: 100%;\n  width: 100%;\n  overflow: hidden;\n  background: #000;\n}\n.video-container .poster img {\n  width: 100%;\n  bottom: 0;\n  position: absolute;\n}\n.video-container .filter {\n  z-index: 100;\n  position: absolute;\n  background: rgba(0, 0, 0, 0.4);\n  width: 100%;\n}\n.video-container video {\n  position: absolute;\n  z-index: 0;\n  bottom: 0;\n}\n.video-container video.fillWidth {\n  width: 100%;\n}\n* {\n  margin: 0;\n  padding: 0;\n}\n.transition {\n  transition: 0.2s all ease-in-out;\n}\n.direction-icon {\n  width: 50px;\n  height: 50px;\n  background-position: center;\n  background-repeat: no-repeat;\n}\n.direction-icon.web-development,\n.direction-icon.light.web-development {\n  background-image: url(" + __webpack_require__(17) + ");\n}\n.direction-icon.android-development,\n.direction-icon.light.android-development {\n  background-image: url(" + __webpack_require__(18) + ");\n}\n.direction-icon.visualization .direction-icon.light.visualization {\n  background-image: url(" + __webpack_require__(19) + ");\n}\n.direction-icon.design,\n.direction-icon.light.design {\n  background-image: url(" + __webpack_require__(20) + ");\n}\n.direction-icon.dark.web-development {\n  background-image: url(" + __webpack_require__(21) + ");\n}\n.direction-icon.dark.android-development {\n  background-image: url(" + __webpack_require__(22) + ");\n}\n.direction-icon.dark.visualization {\n  background-image: url(" + __webpack_require__(23) + ");\n}\n.direction-icon.dark.design {\n  background-image: url(" + __webpack_require__(24) + ");\n}\n.animated-transparency {\n  opacity: .8;\n  transition: 0.2s all ease-in-out;\n}\n.btn {\n  cursor: pointer;\n  padding: 10px 15px;\n  border-radius: 2px;\n  text-align: center;\n  text-transform: uppercase;\n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);\n  border: none;\n  outline: none;\n  font-size: 14px;\n  font-weight: bold;\n  color: #fff;\n  transition: 0.2s all ease-in-out;\n}\n.btn:hover {\n  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);\n}\n.btn-large {\n  font-size: 16px;\n  padding: 15px 23px;\n  min-width: 300px;\n  max-width: 400px;\n  color: #fff;\n}\n.btn-blue {\n  background-color: #3498db;\n}\n.btn-blue:hover {\n  background-color: #308fca;\n}\n.btn-red {\n  background-color: #F55040;\n}\n.btn-red:hover {\n  background-color: #e74c3c;\n}\n.btn-noshadow {\n  box-shadow: none;\n}\n.video-container {\n  transition: 0.6s all cubic-bezier(0.25, 0.96, 0.57, 1);\n}\n.video-top-animation {\n  margin-top: -48.3%;\n}\nbody {\n  width: 100%;\n  height: 100%;\n  font-family: 'PT Sans', sans-serif;\n}\nbody #main-container {\n  width: 100%;\n  background-color: rgba(0, 0, 0, 0.2);\n}\nbody #main-container #header {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: calc(100% - 100px);\n  line-height: 50px;\n  padding: 15px 50px;\n  background-color: #fff;\n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);\n}\nbody #main-container #header #logo-container {\n  color: #2c3e50;\n  float: left;\n  font-size: 25px;\n  font-weight: bold;\n}\nbody #main-container #header #logo-container #company-logo {\n  width: 20px;\n  height: 20px;\n}\nbody #main-container #header #nav-container {\n  float: right;\n}\nbody #main-container #header #nav-container #nav {\n  list-style: none;\n}\nbody #main-container #header #nav-container #nav li {\n  display: inline;\n  margin-right: 25px;\n}\nbody #main-container #header #nav-container #nav li a {\n  font-weight: bold;\n  font-size: 15px;\n  text-decoration: none;\n  text-transform: uppercase;\n  color: #2c3e50;\n}\nbody #main-container #content-container {\n  position: absolute;\n  width: 100%;\n  top: 45%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  font-size: 32px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  color: #fff;\n}\nbody #main-container #content-container #company-hero-title {\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);\n}\nbody #main-container #content-container #order-product-button {\n  margin-top: 20px;\n}\nbody #directions-container {\n  position: relative;\n  width: 100%;\n  height: 150px;\n  background-color: #f0f0f0;\n}\nbody #directions-container #directions {\n  position: absolute;\n  top: 0;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  display: flex;\n  flex-direction: row;\n  flex-grow: 1;\n  align-items: center;\n  justify-content: center;\n  border-radius: 3px;\n  background-color: #fff;\n  padding: 20px 10px;\n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);\n}\nbody #directions-container #directions .direction {\n  cursor: pointer;\n  position: relative;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column;\n  min-width: 150px;\n  padding: 0 20px;\n  text-align: center;\n  color: #1e1e1e;\n  border-right: 1px solid #c8c8c8;\n  transition: 0.2s all ease-in-out;\n}\nbody #directions-container #directions .direction:last-child {\n  border: none;\n}\nbody #directions-container #directions .direction .direction-icon {\n  width: 32px;\n  height: 32px;\n  background-size: 100%;\n  opacity: .8;\n  transition: 0.2s all ease-in-out;\n}\nbody #directions-container #directions .direction .title {\n  color: #2c3e50;\n  margin-top: 5px;\n  font-weight: bold;\n  opacity: .8;\n  transition: 0.2s all ease-in-out;\n}\nbody #directions-container #directions .direction .description {\n  color: #2c3e50;\n  padding: 7px 0;\n}\nbody #directions-container #directions .direction .bottom-line {\n  position: absolute;\n  bottom: -20px;\n  left: 0;\n  width: 0;\n  height: 3px;\n  background-color: transparent;\n  transition: 0.2s all ease-in-out;\n}\nbody #directions-container #directions .direction:hover .direction-icon {\n  opacity: 1;\n  transform: scale(1.1);\n}\nbody #directions-container #directions .direction:hover .title {\n  opacity: 1;\n}\nbody #directions-container #directions .direction:hover .bottom-line {\n  width: 100%;\n}\nbody #directions-container #directions .direction:hover.web .bottom-line {\n  background-color: #3498db;\n}\nbody #directions-container #directions .direction:hover.android .bottom-line {\n  background-color: #2ecc71;\n}\nbody #directions-container #directions .direction:hover.visualization .bottom-line {\n  background-color: #e74c3c;\n}\nbody #directions-container #directions .direction:hover.design .bottom-line {\n  background-color: #f1c40f;\n}\nbody #clients-container {\n  position: relative;\n  display: flex;\n  align-items: center;\n  flex-direction: column;\n  width: 100%;\n  height: auto;\n  padding-bottom: 40px;\n  background-color: #f0f0f0;\n}\nbody #clients-container #clients-header {\n  width: 100%;\n  text-align: center;\n  margin-top: 20px;\n  font-size: 30px;\n  color: #323232;\n  padding: 10px 0;\n  color: #2c3e50;\n}\nbody #clients-container #clients {\n  margin-top: 20px;\n  overflow: hidden;\n  width: 60%;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n}\nbody #clients-container #clients .slick-arrow:not(.slick-control) {\n  display: none;\n}\nbody #clients-container #clients .slick-control.slick-arrow {\n  position: relative;\n  cursor: pointer;\n  width: 100px;\n  height: 28px;\n  border: none;\n  background: transparent;\n  font-weight: bold;\n  font-size: 15px;\n  color: #2c3e50;\n  border-radius: 50%;\n  background: rgba(0, 0, 0, 0.1);\n}\nbody #clients-container #clients .slick-control.slick-arrow .inner-arrow {\n  position: absolute;\n  top: 8px;\n  width: 0;\n  height: 0;\n  border-style: solid;\n}\nbody #clients-container #clients .slick-control.slick-arrow .inner-arrow.left {\n  right: 10px;\n  border-width: 6.5px 10px 6.5px 0;\n  border-color: transparent #2c3e50 transparent transparent;\n}\nbody #clients-container #clients .slick-control.slick-arrow .inner-arrow.right {\n  left: 10px;\n  border-width: 6.5px 0 6.5px 10px;\n  border-color: transparent transparent transparent #2c3e50;\n}\nbody #clients-container #clients .client-slide {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column;\n  margin-right: 35px;\n}\nbody #clients-container #clients .client-slide img {\n  width: 120px;\n  height: 120px;\n}\nbody #clients-container #clients .client-slide .client-name {\n  margin-top: 10px;\n}\nbody #clients-container #client-reviews {\n  margin-top: 50px;\n  width: 60%;\n}\nbody #clients-container #client-reviews .client-review-slide {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 1;\n}\nbody #clients-container #client-reviews .client-review-slide .client-photo {\n  display: flex;\n  flex-grow: 2;\n}\nbody #clients-container #client-reviews .client-review-slide .client-photo img {\n  max-width: 140px;\n  max-height: 140px;\n  border-radius: 50%;\n}\nbody #clients-container #client-reviews .client-review-slide .client-review-container {\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n  flex-grow: 4;\n}\nbody #clients-container #client-reviews .client-review-slide .client-review-container .client-delegate-name {\n  color: #2c3e50;\n}\nbody #clients-container #client-reviews .client-review-slide .client-review-container .client-delegate-name .name {\n  font-size: 19px;\n  font-weight: bold;\n}\nbody #clients-container #client-reviews .client-review-slide .client-review-container .client-delegate-name .company {\n  font-size: 17px;\n  font-style: italic;\n}\nbody #clients-container #client-reviews .client-review-slide .client-review-container .client-review-text {\n  color: #2c3e50;\n  font-size: 16px;\n  margin-top: 15px;\n}\nbody #team-container {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  padding: 30px 0;\n  background-color: #2c3e50;\n}\nbody #team-container #team-header {\n  color: #fff;\n}\nbody #team-container #team {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  margin-top: 20px;\n  width: 70%;\n}\nbody #team-container #team .teammate {\n  display: flex;\n  flex-direction: column;\n  flex-grow: 1;\n  align-items: center;\n  justify-content: center;\n}\nbody #team-container #team .teammate .teammate-photo {\n  border-radius: 50%;\n  width: 150px;\n  height: 150px;\n  border: 3px solid #1d2d3e;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\nbody #team-container #team .teammate .teammate-photo.first {\n  background-image: url('/images/team/1.jpg');\n}\nbody #team-container #team .teammate .teammate-photo.second {\n  background-position: top;\n  background-image: url('/images/team/2.jpg');\n}\nbody #team-container #team .teammate .teammate-photo.third {\n  background-image: url('/images/team/3.jpg');\n}\nbody #team-container #team .teammate .teammate-photo.fourth {\n  background-image: url('/images/team/4.jpg');\n}\nbody #team-container #team .teammate .teammate-name {\n  margin-top: 10px;\n  font-weight: bold;\n  color: #fff;\n}\nbody #team-container #team .teammate .teammate-position {\n  margin-top: 5px;\n  color: #fff;\n  text-align: center;\n}\n", ""]);
+exports.push([module.i, "* {\n  margin: 0;\n  padding: 0;\n}\n.transition {\n  transition: 0.2s all ease-in-out;\n}\n.direction-icon {\n  width: 50px;\n  height: 50px;\n  background-position: center;\n  background-repeat: no-repeat;\n}\n.direction-icon.web-development,\n.direction-icon.light.web-development {\n  background-image: url('../images/white/web_development.png');\n}\n.direction-icon.android-development,\n.direction-icon.light.android-development {\n  background-image: url('../images/white/android_development.png');\n}\n.direction-icon.visualization .direction-icon.light.visualization {\n  background-image: url('../images/white/visualization.png');\n}\n.direction-icon.design,\n.direction-icon.light.design {\n  background-image: url('../images/white/design.png');\n}\n.direction-icon.dark.web-development {\n  background-image: url('../images/black/web_development.png');\n}\n.direction-icon.dark.android-development {\n  background-image: url('../images/black/android_development.png');\n}\n.direction-icon.dark.visualization {\n  background-image: url('../images/black/visualization.png');\n}\n.direction-icon.dark.design {\n  background-image: url('../images/black/design.png');\n}\n.animated-transparency {\n  opacity: .8;\n  transition: 0.2s all ease-in-out;\n}\n.btn {\n  cursor: pointer;\n  padding: 10px 15px;\n  border-radius: 2px;\n  text-align: center;\n  text-transform: uppercase;\n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);\n  border: none;\n  outline: none;\n  font-size: 14px;\n  font-weight: bold;\n  color: #fff;\n  transition: 0.2s all ease-in-out;\n}\n.btn:hover {\n  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);\n}\n.btn-large {\n  font-size: 16px;\n  padding: 15px 23px;\n  min-width: 300px;\n  max-width: 400px;\n  color: #fff;\n}\n.btn-blue {\n  background-color: #2c3e50;\n}\n.btn-blue:hover {\n  background-color: #308fca;\n}\n.btn-red {\n  background-color: #F55040;\n}\n.btn-red:hover {\n  background-color: #e74c3c;\n}\n.btn-noshadow {\n  box-shadow: none;\n}\n.video-container {\n  transition: 0.6s all cubic-bezier(0.25, 0.96, 0.57, 1);\n}\n.video-top-animation {\n  margin-top: -48.3%;\n}\nbody {\n  width: 100%;\n  height: 100%;\n  font-family: 'PT Sans', sans-serif;\n}\nbody #main-container {\n  position: relative;\n  overflow: hidden;\n  width: 100%;\n  height: 600px;\n}\nbody #main-container #header {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: calc(100% - 100px);\n  line-height: 50px;\n  padding: 15px 50px;\n  background-color: #fff;\n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);\n}\nbody #main-container #header #logo-container {\n  color: #2c3e50;\n  float: left;\n  font-size: 25px;\n  font-weight: bold;\n}\nbody #main-container #header #logo-container #company-logo {\n  width: 20px;\n  height: 20px;\n}\nbody #main-container #header #nav-container {\n  float: right;\n}\nbody #main-container #header #nav-container #nav {\n  list-style: none;\n}\nbody #main-container #header #nav-container #nav li {\n  display: inline;\n  margin-right: 25px;\n}\nbody #main-container #header #nav-container #nav li a {\n  font-weight: bold;\n  font-size: 15px;\n  text-decoration: none;\n  text-transform: uppercase;\n  color: #2c3e50;\n}\nbody #main-container #content-container {\n  position: absolute;\n  width: 100%;\n  top: 45%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  font-size: 32px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  color: #fff;\n}\nbody #main-container #content-container #company-hero-title {\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);\n}\nbody #main-container #content-container #company-hero-title #hero-logo {\n  position: relative;\n  width: 40px;\n  height: 40px;\n  transform: translateY(7px);\n}\nbody #main-container #content-container #order-product-button {\n  margin-top: 20px;\n}\nbody #directions-container {\n  position: relative;\n  width: 100%;\n  height: 100px;\n  background-color: #f0f0f0;\n}\nbody #directions-container #directions {\n  position: absolute;\n  top: 0;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  display: flex;\n  flex-direction: row;\n  flex-grow: 1;\n  align-items: center;\n  justify-content: center;\n  border-radius: 3px;\n  background-color: #fff;\n  padding: 20px 10px;\n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);\n}\nbody #directions-container #directions .direction {\n  cursor: pointer;\n  position: relative;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column;\n  min-width: 150px;\n  padding: 0 20px;\n  text-align: center;\n  color: #1e1e1e;\n  border-right: 1px solid #c8c8c8;\n  transition: 0.2s all ease-in-out;\n}\nbody #directions-container #directions .direction:last-child {\n  border: none;\n}\nbody #directions-container #directions .direction .direction-icon {\n  width: 32px;\n  height: 32px;\n  background-size: 100%;\n  opacity: .8;\n  transition: 0.2s all ease-in-out;\n}\nbody #directions-container #directions .direction .title {\n  color: #2c3e50;\n  margin-top: 5px;\n  font-weight: bold;\n  opacity: .8;\n  transition: 0.2s all ease-in-out;\n}\nbody #directions-container #directions .direction .description {\n  color: #2c3e50;\n  padding: 7px 0;\n}\nbody #directions-container #directions .direction .bottom-line {\n  position: absolute;\n  bottom: -20px;\n  left: 0;\n  width: 0;\n  height: 3px;\n  background-color: transparent;\n  transition: 0.2s all ease-in-out;\n}\nbody #directions-container #directions .direction:hover .direction-icon {\n  opacity: 1;\n  transform: scale(1.1);\n}\nbody #directions-container #directions .direction:hover .title {\n  opacity: 1;\n}\nbody #directions-container #directions .direction:hover .bottom-line {\n  width: 100%;\n}\nbody #directions-container #directions .direction:hover.web .bottom-line {\n  background-color: #3498db;\n}\nbody #directions-container #directions .direction:hover.android .bottom-line {\n  background-color: #2ecc71;\n}\nbody #directions-container #directions .direction:hover.visualization .bottom-line {\n  background-color: #e74c3c;\n}\nbody #directions-container #directions .direction:hover.design .bottom-line {\n  background-color: #f1c40f;\n}\nbody #clients-container {\n  position: relative;\n  display: flex;\n  align-items: center;\n  flex-direction: column;\n  width: 100%;\n  height: auto;\n  padding-bottom: 40px;\n  background-color: #f0f0f0;\n}\nbody #clients-container #clients-header {\n  width: 100%;\n  text-align: center;\n  margin-top: 20px;\n  font-size: 30px;\n  color: #323232;\n  padding: 10px 0;\n  color: #2c3e50;\n}\nbody #clients-container #clients {\n  margin-top: 20px;\n  overflow: hidden;\n  width: 60%;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n}\nbody #clients-container #clients .slick-arrow:not(.slick-control) {\n  display: none !important;\n}\nbody #clients-container #clients .slick-control.slick-arrow {\n  position: relative;\n  cursor: pointer;\n  width: 100px;\n  height: 28px;\n  margin: 0 10px;\n  background: transparent;\n  font-weight: bold;\n  font-size: 15px;\n  color: #2c3e50;\n  border-radius: 50%;\n  background-color: rgba(0, 0, 0, 0.1);\n  outline: none;\n  border: none;\n  transition: 0.2s all ease-in-out;\n}\nbody #clients-container #clients .slick-control.slick-arrow:hover {\n  background-color: rgba(0, 0, 0, 0.15);\n}\nbody #clients-container #clients .slick-control.slick-arrow .inner-arrow {\n  position: absolute;\n  top: 7px;\n  width: 0;\n  height: 0;\n  border-style: solid;\n}\nbody #clients-container #clients .slick-control.slick-arrow .inner-arrow.left {\n  right: 11px;\n  border-width: 6.5px 10px 6.5px 0;\n  border-color: transparent #2c3e50 transparent transparent;\n}\nbody #clients-container #clients .slick-control.slick-arrow .inner-arrow.right {\n  left: 11px;\n  border-width: 6.5px 0 6.5px 10px;\n  border-color: transparent transparent transparent #2c3e50;\n}\nbody #clients-container #clients .client-slide {\n  cursor: pointer;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column;\n  margin-right: 35px;\n  padding: 10px 0;\n  border-radius: 2px;\n  border: none;\n  outline: none;\n  transition: 0.2s all ease-in-out;\n}\nbody #clients-container #clients .client-slide:hover {\n  background-color: rgba(0, 0, 0, 0.05);\n}\nbody #clients-container #clients .client-slide img {\n  width: 120px;\n  height: 120px;\n}\nbody #clients-container #clients .client-slide .client-name {\n  color: #2c3e50;\n  margin-top: 10px;\n}\nbody #clients-container #client-reviews {\n  margin-top: 50px;\n  width: 60%;\n}\nbody #clients-container #client-reviews .client-review-slide {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 1;\n  border: none;\n  outline: none;\n}\nbody #clients-container #client-reviews .client-review-slide .client-photo {\n  display: flex;\n  flex-grow: 2;\n}\nbody #clients-container #client-reviews .client-review-slide .client-photo img {\n  max-width: 140px;\n  max-height: 140px;\n  border-radius: 50%;\n}\nbody #clients-container #client-reviews .client-review-slide .client-review-container {\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n  flex-grow: 4;\n}\nbody #clients-container #client-reviews .client-review-slide .client-review-container .client-delegate-name {\n  color: #2c3e50;\n}\nbody #clients-container #client-reviews .client-review-slide .client-review-container .client-delegate-name .name {\n  font-size: 19px;\n  font-weight: bold;\n}\nbody #clients-container #client-reviews .client-review-slide .client-review-container .client-delegate-name .company {\n  font-size: 17px;\n  font-style: italic;\n}\nbody #clients-container #client-reviews .client-review-slide .client-review-container .client-review-text {\n  color: #2c3e50;\n  font-size: 16px;\n  margin-top: 15px;\n}\nbody #team-container {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  padding: 30px 0;\n  background-color: #2c3e50;\n}\nbody #team-container #team-header {\n  color: #fff;\n}\nbody #team-container #team {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  margin-top: 20px;\n  width: 70%;\n}\nbody #team-container #team .teammate {\n  display: flex;\n  flex-direction: column;\n  flex-grow: 1;\n  align-items: center;\n  justify-content: center;\n}\nbody #team-container #team .teammate .teammate-photo {\n  border-radius: 50%;\n  width: 150px;\n  height: 150px;\n  border: 3px solid #1d2d3e;\n  background-size: cover;\n  background-repeat: no-repeat;\n  background-position: center;\n}\nbody #team-container #team .teammate .teammate-photo.first {\n  background-image: url('../images/team/1.png');\n}\nbody #team-container #team .teammate .teammate-photo.second {\n  background-position: top;\n  background-image: url('../images/team/2.png');\n}\nbody #team-container #team .teammate .teammate-photo.third {\n  background-image: url('../images/team/3.png');\n}\nbody #team-container #team .teammate .teammate-photo.fourth {\n  background-image: url('../images/team/4.png');\n}\nbody #team-container #team .teammate .teammate-name {\n  margin-top: 10px;\n  font-weight: bold;\n  color: #fff;\n}\nbody #team-container #team .teammate .teammate-position {\n  margin-top: 5px;\n  color: #fff;\n  text-align: center;\n}\nbody #contact-us-container {\n  position: relative;\n  display: flex;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  height: 350px;\n  overflow: hidden;\n  background-size: cover;\n}\nbody #contact-us-container #contact-us-text-container {\n  display: flex;\n  flex-grow: 1;\n  height: 100%;\n  align-items: center;\n  justify-content: center;\n}\nbody #contact-us-container #contact-us-form-container {\n  display: flex;\n  flex-grow: 1;\n  height: 100%;\n  align-items: center;\n  justify-content: center;\n}\nbody #footer-container {\n  position: relative;\n  width: 100%;\n  height: 70px;\n  backgroubd-color: #fff;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 17 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAA00lEQVRo3u2Xuw6CQBBFJwY/xobGf4OSLf1TE01sLa8NJBRTuMwrxntKkrucs1SIEEIIIYSQQwBoAG5Vew/5jW4J695TfmPq2E/KvlXKPwCMHWdcANyVc2K/hId8WYSnfHpEhHxaRKR8eESGfFhEprx7RIW8W0Sl/JGIk7J/K88GETlnBazvGr50U29gVupfAK7R5gBGAE/l/UvvQekRbvIVEe7ymRFh8hkR4fKREWnyERHp8p4RZfI7gd/9pdxJzJabs+69Iprl5qx7QgghhJB/5wM1TTpZdvSetQAAAABJRU5ErkJggg=="
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABvklEQVRo3u2YvUoDQRRG7yhG6yBiUAP2voRgb6f2gpjOwodYn8JC8BWsbCwsBAXRyjY/io2FTeJPjoW7sFk2m5lJZifKHEgzO3P5zibZvTMilgDXwC2wNEaNFeABuLStYQ1wwy+PNhJx+Ke4xpUPgUXgPi0BrAHHwAXQArrxpxmPNYBqJvwdUC1dIEfiGfhkND3g1Xv4lERDI/Qw9n2HPwL6Ywj0gUNf4ffGDJ/wDWyXHb4OvE8gfMIbsFymwHk2QepaIQXzTssKvw58ORD4AFZN88xYOOyKyGyO2EDAghswbN6ciOyUIbBpsUaXrTIENhwKGNdWpguArojMOxLoKaUWHNUOlANQAU6ADtAGIqCSuu4U3RxFAlFO3ciDQGGOBJUj0BGRWmb4RSlVSwRc/gKUUkonR5EAIwqXJVCYI8HmPTBVBAHfBAHfBAHfBAHfBAHfBAHf5Al0csbaHrJp5cgTONMcc41djngrF8XbON9byqE5EmyOVZoiYnwEqElTKVU3WWDzJz4QkZaL8HFtI4y/gSy6Wz/deab8y8fonyII+CYI+GYSArq9k5MeaxICuj3LtPRYg+j2LLrzTPkBtqCUMzQAkMAAAAAASUVORK5CYII="
-
-/***/ }),
 /* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "c9ba6fd60d2137f20365c7622d805906.png";
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAACB1BMVEUAAAAAAAC2tra4uLjBwcHCwsLJycnNzc3Pz8/Q0NDR0dHW1tbY2Njb29vR0dHV1dXX19fPz8/U1NTW1tbZ2dnf39/Hx8fMzMzQ0NDZ2dna2trh4eHy8vL+/v7T09PX19fd3d3e3t7g4ODf39/g4ODg4ODk5OTExMTV1dXj4+Pl5eXd3d3i4uLl5eXm5ubm5ubp6enm5ubn5+fq6urn5+fp6enU1NTi4uLo6Ojw8PDo6Ojp6enp6eny8vLr6+vr6+vs7Ozu7u7s7Ozu7u7r6+vt7e3u7u7v7+/s7Ozu7u7w8PDw8PDv7+/x8fHn5+fv7+/w8PDx8fHp6enx8fHw8PDz8/Px8fHy8vL4+Pjz8/Pz8/P09PTz8/P09PTz8/P09PTz8/P19fX09PT19fXy8vL19fX19fX29vb19fX29vb39/f39/f29vb39/f09PT39/f39/f4+Pj39/f39/f39/f5+fn4+Pj4+Pj4+Pj4+Pj5+fn4+Pj5+fn5+fn19fX5+fn4+Pj5+fn7+/v9/f3+/v76+vr39/f5+fn6+vr6+vr6+vr6+vr6+vr6+vr5+fn7+/v6+vr7+/v7+/v6+vr7+/v7+/v8/Pz39/f8/Pz5+fn7+/v8/Pz8/Pz8/Pz4+Pj8/Pz5+fn8/Pz8/Pz+/v79/f38/Pz9/f37+/v9/f3+/v79/f3+/v7///8j5bXvAAAAqnRSTlMAAgICAgICAgICAgICAgQEBAYGBgYGCAgICAgICAgKCgoKCgwOEBASEhISFBQUFBYWGBgYGhocHBweIiIkJCYoKiwuMDY2Njg6Pj5AQkJERERERkhMTlJWVlxeYGRmampubnB0dnh8fIGJi4+Rk5ebn5+ho6mrra+xs7W5vb/Dw8fHycnJy8/Pz9HT1dnb3d3f3+Hn5+np6+vt7e3v8fPz9fX39/n7+/39/WxCKVYAAAK6SURBVEjHnZbnWxRBDMYTFVGwYe8Nu9gbKlbsvSDY8VQsoIJiwYLYRRGxIBY4FcHz8M0f6YedmZ3Z21vuMR/u2d0nyczk/U1yRP9nnPq85Nafj+Uj0zm7AUxEec9FBK8PZIekDF3tLAQCQd2GzLZX0A5l3ZWzMjnUiNNfAEAgQNvJoU5CJjZmPc6r6haIiEDQuLu/diAK+FmRG+9BlOGycjJV8pyITCwRc87hJh3Ss8YEeH5mOf3IxEw0PtYuIhCRfcyq4KQdzS+dubLQHHHB1YSIILGIHb1Y60VEvLgDbeVDvC9MtOk+gBq1k1ClqyFA08F++vOAkjfxZX7ClIDihKdY3XrzacKWdOAR0aAHAkAE0l05NwoHHVcK3z6dGtYrE9NbYFvjnt7uQ4XyFI8kwe2ioK/D0vK4oUHgsfRjlUWPF2DQYL4uKVbbR6Pg06ARom1JtR1vCYigs9AFwYePmAc2aKBFb0guKi41niaAiLgMKfY+30KHA1XK/2CS6yqhTIvEwa7BRBf8C6Or1DDYqmZQh8JOrYCo24zk1ohOkVULVXutmaAmqrts70k5cXxFBHzZj1NLVBFF3fyjh9YFYlqmhSa3WDruMIFSv5m4aJj3KV//wg+ozwnpV0YH733UxEkrr6lSJYuVvKx3YYs3usDouVctUk1+f7JanVph9rdLM1X85BdtvwHpWKoYMx3R6jLEWV3SGhujF5mz+ibOuXeRXTiYugC8O5anudrfPDZysDH9AiB4VZLrBYzbEWw/HGhIP5VYDTsznKLfjb53N6efsKZezJ99wZI31nLohHFGwlsLidbzfSl0LumBwsT8zLi/PDHVuvdsVLbQYGZ66l2exJ1duVY6NhfaRYmYn4iIxKuKTHJnWmp/v/PRI6A5NsNtCrq3WG6+w8P6I8M5qJDDJ0f930hv/wALJXwHTIqs1gAAAABJRU5ErkJggg=="
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAKlBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKE86IAAAADXRSTlMAKS4zdnd/gIjn6uvuijGg+wAAAJBJREFUOMvt0bEJwzAUhGHFOHgGd+7dZIQsIvAIXiDgRdxkj1TZwZiQ2yUoAb27hwi41zW/4PFVCqHu6LpFm3fbtRkA19QWmBXgNaSeVuwO3H+vHlgKwBMDjhhQwkAIAyYKiCggEvG+8KF5YPs+zsCTDyMwhQLJwBMDSggoYcBEABMFRhz487Uhblojs7buwD4HGmQ6SDZ1VgAAAABJRU5ErkJggg=="
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAq1BMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0NbREAAAAOHRSTlMABhIUFhgbHB0eIUhJT1hjaGlwcnR4h4iJn6a2t7m9wsbKzc7R09Ta4uPk5ebn6u/z+Pn6+/z9/nVVVAcAAADzSURBVEjH7ZTXEoIwEEXX3nvB3gsKFqz5/y9TNDEkJptxnNEX7guQOedluRsAIaNJXDxIzgeAZUwWgpFckiEqxGZ3I13vrT1v1atE7/w0CiZjcyI0h62RB6gQISUTX72KwrWM80WJJ+RSwPjMnrxll0CEjk8AMPb51tbz2bNKOKa0QoMoU9MKfbXQ1QqOWrC1gqcWPPh9Ii3XsSJ8nHI4QWP5pxYmMILG9T83mMAImuB/VQvsGQqh8G/hsfxrTGBEcIGaxgVq8hW1HNOKUkLK6tN7Ka807Bx6g/B5SJMJhW8E3hqpP7rw1kj90V79r9ao+3MD7nbtAHDHqZsAAAAASUVORK5CYII="
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAFz0lEQVRo3u2ZS6hdRRaGv39V7X1u7iORJN5oEmMjEltEBBUlYGsLPsCBk7Y1bWscaOI7Jj7is/FB99zWqCAYH0iLDToRxIGjBIw9cKBglIgPeqJT35rkehzstfepXfeec0+uj3vRW7Cos6v2rlr/WqtWrbUOLLbFtth+1qYQkYUWjY1NUpSjWCgWKtcFkoGEzJBMoAgEfyMimSz2vrEwz0xbgRRQzbSZkELNtGJBZ+2JHHHuZa2vgCjJFCIWiurbX1MzqRRd0gGI1WNAFpGFMaSLgP8A74LuQTqp/sz74JoRFiBEkEHo/ALCdgmFUCAL5ExbCJiFcaSzgaeAT4Au8IP3XeA7YC/oFsmOK0bGlGzhYEwWSxeUg/oJpxEkynKkZtpqpishCoWiQDoTeBj4KGP6kNMUcDADcwh4FekqZEeERC0VGAVkzZBZgOHMrLJnCxELkepkEt12e+qXzgD9E9ifMNVNmJ3KxmtgNah0/HPgBdBfZGEUdwa+V6zBSKqchMpB9t1zfSCr+G8M/mTQPZVNcyBjrB/T/agfmM9Au5DORzZWgTHcU9DQYHuPLFm2kliOmGTHg+4A/udMDiPpw6VaAIcyE/wI9ARogyyUsoBmY959szto/Sthdq6SniuYqeSsdCsTczc8CIS7SD88eiPxHoeyQ/hTmRyGpnzvLvBOy7n0VUALAHsyKcwH1Zp4u8f/oBvcjMTjvL6AALzZuzsHAAjlGJUPE0irQOuRjkZaA07SGqTV/nt183smSufr72STTkf2ocmEVoLWIU32YsUB90HZCSxd1vL3J4NuA93qfUrbfHxbn/ntTvU7t3t/M2ir9zcCW6u+Gd/am2c70jm9I1qgQQA8jsEvL5AedhUenAfzcdPVK7WB17HWEBeyPDALHb9xf/DL60DvEtNOyf6I9DfgU9/0APC9/34L6c9IpwGv+dj3/s4U8DnSZsnWgnYk3i5d42lkyyvXKRXjq2bnPZYdQqyDtuZAv5Qw0AV2+7jrU1dkmppCOrXKDyKysBz4f7bGA75GHX7uyubfC0WntFgimWSx9pKzCL/s+DlWwiD3+qLfAl2kx318iV/vZ2Ue6wOq02bJGrtbDEobPSgc9Z13tPaAJ9tCAsXyMILR6sarIf+jvbgebaRXgT0708B7TEyI0dFUi3syAJe4kEZ8x7syADtro6h4mVueUAO4LwPwSAbgrGkA1q+H8fEUQK6Bv2YA7swAPNZLR20OrBdlCuDBDMDjbQD2p2kATj8dJiYGAbhkFgA7k3x6DgDKFoCHMgBP12+5HU/XwCmn5BrYs3AAqAHQcQDnZQD2cfHFsHTpAgWAdmVn4IIMwPuMjcvXWNAm1KnSPMsBfEAIIQsOD/cQzyuA/cRohDDYhPglALTD1WI4ALpwGoAQAmduSDI89k7TAAPvgcaN1mnxwGQmiehmuolnOwPnD6GBvXM0oaLhZ2hNdDoVSTWA+33RLx3Akx7zjfi1fV62+T7KkRBGSqkXwNQm9LUDuLwdC+n29h78uzGhoeqoDUozIFrsBM+EulkZpc5rv3H6epb5mvKc+iDwlTP8xQwhex2Vvo1sFPCyhBfVyk4/C7I0sb8UdLcnGzd44nED0s3ArUkisw2o529EuimZd+Km1hpwSzsR4lrQ1aBrqp7NwHbQRoCJNSf1rwlZUTTFI8nWIN3rBdnrfcEtoGuzfnNG9fiWvvPSdc0a0hakLb7+Zu83AVdWvTYhXQlscrA7JJ3olqLpGqhq5SD9fQEk890ZzK2L9EAvyFSe0C+hnDiSzvK1WIirLcRjLcRjLMRj5NR6ttA8mz8rmUveX2chrkveb559LJ1fZyFOWogrZGGFLKywEGtaHsoJWTlOKJbMUNWt2krgZeC/Xg2bD3oReB54BngWeM77Zyve9Ac/yDYTgKOAfV7f/9BL5vNFH3v1+/2E9gMnJP/2/Eb/aFzgNLPvb0jWfp5PUkpKeg1Ral9si+330X4Ez+bHDAOmY9sAAAAASUVORK5CYII="
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABiVBMVEUAAAAAAACAgID///9AQEArKysAAAAgICBAQEAaGhozMzMrKyskJCQgICAcHBwrKys5OTkaGhomJiYXFxcVFRUUFBQbGxsuLi4REREXFxcODg4VFRUUFBQTExMSEhIREREREREQEBATExMSEhISEhIQEBAQEBAPDw8PDw8XFxcWFhYODg4NDQ0NDQ0QEBAGBgYMDAwLCwsLCwsLCwsNDQ0KCgoMDAwJCQkMDAwLCwsLCwsNDQ0LCwsICAgKCgoKCgoJCQkHBwcHBwcJCQkJCQkMDAwICAgGBgYICAgICAgICAgICAgGBgYHBwcHBwcHBwcHBwcGBgYHBwcFBQUFBQUHBwcKCgoGBgYBAQEDAwMEBAQFBQUFBQUGBgYHBwcFBQUFBQUFBQUFBQUFBQUDAwMGBgYDAwMFBQUFBQUEBAQGBgYDAwMEBAQDAwMICAgDAwMEBAQGBgYDAwMDAwMDAwMHBwcDAwMGBgYBAQEDAwMCAgICAgIDAwMBAQECAgIEBAQAAAABAQECAgJlt3yxAAAAgHRSTlMAAgICBAYICAgKCgwOEBISEhQUFhgaHBweIiQkJigqLC4wNjg6PkBCRERGSExOUlZWXF5gZGZqbm5wdHZ4fHyBiYuPkZOXm5+foaOpq62vsbO1ub2/w8PHycnJy8/Pz9HT1dnb3d3f3+Hn5+np6+vt7e3v8fPz9fX39/n7+/39/fn0uf0AAAKoSURBVEjHnZbpWxNBDMYzhFIOQSuHIl6gCCoiXq0HiqAi4oEHFQ88EDwQFaWKSKXm9S/3w87MzuxuFx7zoc/uPklmJu9vkhL9n3H8ue3On4/5TDVnP4CJKPNcRPC6XyWkTFztAgQCwdS+rW0vtwxt66PNWzlUJv8ZAAQCLJ2t9RIysTXnsWVsXSAiAsHsEWUciCJ+TuT+BxBtuKqdbJUCJyIbS8Ssjs+ZkI1OGxD42eXMIxMzUbawLCIQkaPMuuBkHO0vnb+Ws0fMXS+LCMqt7OnFRi8i4tYVLOVrgy9MdOAhgAm9k0SlxyHAXL8yn9XAm1JbmDAW0F0OFJvaaz9le6qBR0TqkQAQgayPtqThYOIGEdqnc7WbMtGwANdm+za7D8PaUwKSBHe7or4eS+0lS4MgYOl7h0NPEGDRYL4pMZusMSiENBiEqKeitxMsARGsdvgghPARsyoaoMVsSC5rLg2eNoCIeAgxe9fkoMORKjV9sMlNlTBkROJo12CiK+GFMVUqKqeaUR06Vo0Com8zKj0pnUJNQtfeaCaYSOsuhzZiJy61p8CnZuIlGk6jbufJY3siMQsNickdlk57TGAwbCY+Gva98dtfhAHTKqFfWR2C90xd3a4bulSVbi0vm1244tXnrJ59epFxCvuT0+r0Cju+jjTr+MaXS78BWWnTjNmO6HQZYrUmi4V6s8j23bdx0b+L7MPBtAbg/amM4ap/Pps62Jh+ARC8GlBBQPZwtP1wpCH91GIVe7c4RX9Yfe8frD5hbb2Yv4SCVW51cuKE8UbCWweJxUs1lDiXzEBhYn5i3V+caXDuPVuVHTSYmZ4Gl6d8r1c56dheaB8lYn4mIlIa67LJvWlp/MPORzPAfGGb3xRMb3HcQofH0ycyHFXI45PT/m9Ut38P6xgKvCcJvQAAAABJRU5ErkJggg=="
-
-/***/ }),
-/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(26);
+var content = __webpack_require__(20);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -12675,8 +13218,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../css-loader/index.js!../../less-loader/dist/cjs.js!./slick.less", function() {
-			var newContent = require("!!../../css-loader/index.js!../../less-loader/dist/cjs.js!./slick.less");
+		module.hot.accept("!!../../css-loader/index.js??ref--1-1!../../less-loader/dist/cjs.js!./slick.less", function() {
+			var newContent = require("!!../../css-loader/index.js??ref--1-1!../../less-loader/dist/cjs.js!./slick.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -12686,7 +13229,7 @@ if(false) {
 }
 
 /***/ }),
-/* 26 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -12700,7 +13243,7 @@ exports.push([module.i, "/* Slider */\n.slick-slider {\n  position: relative;\n 
 
 
 /***/ }),
-/* 27 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*

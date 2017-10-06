@@ -1,5 +1,4 @@
 @import 'variables';
-@import 'hero-video';
 @import url('https://fonts.googleapis.com/css?family=PT+Sans:400,700&subset=cyrillic');
 
 * {
@@ -78,7 +77,7 @@
 }
 
 .btn-blue {
-    background-color: #3498db;
+    background-color: @c-text-primary;
 
     &:hover {
         background-color: #308fca;
@@ -111,8 +110,10 @@ body {
     font-family: 'PT Sans', sans-serif;
 
     #main-container {
+        position: relative;
+        overflow: hidden;
         width: 100%;
-        background-color: rgba(0, 0, 0, .2);
+        height: 600px;
 
         #header {
             position: absolute;
@@ -173,6 +174,13 @@ body {
 
             #company-hero-title {
                 text-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+
+                #hero-logo {
+                    position: relative;
+                    width: 40px;
+                    height: 40px;
+                    transform: translateY(7px);
+                }
             }
 
             #order-product-button {
@@ -184,7 +192,7 @@ body {
     #directions-container {
         position: relative;
         width: 100%;
-        height: 150px;
+        height: 100px;
         background-color: rgb(240, 240, 240);
 
         #directions {
@@ -310,7 +318,7 @@ body {
             align-items: center;
 
             .slick-arrow:not(.slick-control) {
-                display: none;
+                display: none !important;
             }
 
             .slick-control.slick-arrow {
@@ -318,29 +326,37 @@ body {
                 cursor: pointer;
                 width: 100px;
                 height: 28px;
+                margin: 0 10px;
                 border: none;
                 background: transparent;
                 font-weight: bold;
                 font-size: 15px;
                 color: @c-text-primary;
                 border-radius: 50%;
-                background: rgba(0, 0, 0, .1);
+                background-color: rgba(0, 0, 0, .1);
+                outline: none;
+                border: none;
+                .transition;
+
+                &:hover {
+                    background-color: rgba(0, 0, 0, .15);
+                }
 
                 .inner-arrow {
                     position: absolute;
-                    top: 8px;
+                    top: 7px;
                     width: 0;
                     height: 0;
                     border-style: solid;
 
                     &.left {
-                        right: 10px;
+                        right: 11px;
                         border-width: 6.5px 10px 6.5px 0;
                         border-color: transparent @c-text-primary transparent transparent;
                     }
 
                     &.right {
-                        left: 10px;
+                        left: 11px;
                         border-width: 6.5px 0 6.5px 10px;
                         border-color: transparent transparent transparent @c-text-primary;
                     }
@@ -348,11 +364,21 @@ body {
             }
 
             .client-slide {
+                cursor: pointer;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 flex-direction: column;
                 margin-right: 35px;
+                padding: 10px 0;
+                border-radius: 2px;
+                border: none;
+                outline: none;
+                .transition;
+
+                &:hover {
+                    background-color: rgba(0, 0, 0, .05);
+                }
 
                 img {
                     width: 120px;
@@ -360,6 +386,7 @@ body {
                 }
 
                 .client-name {
+                    color: @c-text-primary;
                     margin-top: 10px;
                 }
             }
@@ -373,6 +400,8 @@ body {
                 display: flex;
                 flex-direction: row;
                 flex-grow: 1;
+                border: none;
+                outline: none;
 
                 .client-photo {
                     display: flex;
@@ -453,20 +482,20 @@ body {
                     background-position: center;
 
                     &.first {
-                        background-image: url('/images/team/1.jpg');
+                        background-image: url('../images/team/1.png');
                     }
 
                     &.second {
                         background-position: top;
-                        background-image: url('/images/team/2.jpg');
+                        background-image: url('../images/team/2.png');
                     }
 
                     &.third {
-                        background-image: url('/images/team/3.jpg');
+                        background-image: url('../images/team/3.png');
                     }
 
                     &.fourth {
-                        background-image: url('/images/team/4.jpg');
+                        background-image: url('../images/team/4.png');
                     }
                 }
 
@@ -483,5 +512,39 @@ body {
                 }
             }
         }
+    }
+
+    #contact-us-container {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
+        width: 100%;
+        height: 350px;
+        overflow: hidden;
+        background-size: cover;
+
+        #contact-us-text-container {
+            display: flex;
+            flex-grow: 1;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #contact-us-form-container {
+            display: flex;
+            flex-grow: 1;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    #footer-container {
+        position: relative;
+        width: 100%;
+        height: 70px;
+        backgroubd-color: #fff;
     }
 }
