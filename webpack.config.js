@@ -1,9 +1,12 @@
 var path = require('path');
 
 module.exports = {
-    entry: path.resolve('js/es6/index.js'),
+    entry: {
+        index: path.resolve('js/es6/index.js'),
+        new: path.resolve('js/es6/new.js')
+    },
     output: {
-        filename: 'app.js',
+        filename: '[name].js',
         path: path.resolve('js/bundle'),
     },
     module: {
