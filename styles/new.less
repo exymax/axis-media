@@ -13,6 +13,7 @@
 body {
     padding: 0;
     margin: 0;
+    background-color: @c-body-gray;
 }
 
 .centered-absolute {
@@ -28,6 +29,99 @@ body {
     width: 100%;
     height: 100%;
 
+    #header-container {
+        position: absolute;
+        padding: 0 40px;
+        left: 0;
+        top: 0;
+        width: calc(~"100% - 80px");
+        height: 80px;
+        overflow: hidden;
+
+        #header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            height: 80px;
+            transform: translateY(90px);
+
+            &.active {
+                .transition(.8s, ease-out);
+                transform: translateY(0);
+            }
+
+            #hamburger-menu {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                #menu-toggle {
+                    cursor: pointer;
+                    width: 20px;
+                    height: 30px;
+                }
+
+                #company-name {
+                    margin-left: 20px;
+                    color: @c-text-primary;
+                    font-weight: bold;
+                }
+            }
+
+            #switch-language {
+                overflow: hidden;
+                display: flex;
+                flex-direction: row;
+                background-color: #fff;
+                border-radius: 40px;
+
+                .language {
+                    cursor: pointer;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    color: @c-text-primary;
+                    padding: 5px 12px;
+                    .transition(.2s);
+
+                    &:hover {
+                        background-color: rgb(230, 230, 230);
+                    }
+
+                    &.ru {
+                        .name {
+                            margin-right: 5px;
+                        }
+                    }
+
+                    &.en {
+                        img {
+                            margin-left: 5px;
+                        }
+                    }
+
+                    &:first-child {
+                        border-right: 1px solid @c-body-gray;
+                    }
+
+                    img {
+                        width: 35px;
+                    }
+
+                    .name {
+                        font-size: 13px;
+                        margin-left: 5px;
+                    }
+                }
+            }
+        }
+    }
+
     #border-animation-svg {
         .centered-absolute;
         width: 350px;
@@ -35,7 +129,7 @@ body {
         .transition(.7s, ease-out);
 
         &.active {
-            top: 40%;
+            top: 45%;
         }
 
         .line-transition(~'line.top', -@line-offset-horizontal, 0);
@@ -66,10 +160,12 @@ body {
         width: auto;
         height: 35px;
         .centered-absolute;
-        .transition(.7s, ease-out);
+        display: none;
 
         &.active {
-            top: 40%;
+            .transition(.7s, ease-out);
+            display: block;
+            top: 45%;
         }
 
         #name {
@@ -77,10 +173,8 @@ body {
             transform: translateY(50px);
             color: @c-text-primary;
             font-size: 30px;
-            opacity: 0;
 
             &.active {
-                opacity: 1;
                 transform: translateY(-2px);
             }
 
@@ -108,13 +202,14 @@ body {
             align-items: center;
             justify-content: center;
             transform: translateY(120px);
-            .transition(.8s);
 
             &.active {
+                .transition(.8s);
                 transform: translateY(0);
             }
 
             .direction {
+                cursor: pointer;
                 margin: 0 20px;
                 display: flex;
                 flex-direction: column;
@@ -135,5 +230,15 @@ body {
                 }
             }
         }
+    }
+
+    #particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        z-index: 0;
     }
 }

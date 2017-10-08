@@ -5,12 +5,34 @@
     </head>
     <body>
         <div id="container">
+            <div id="header-container">
+                <div id="header">
+                    <div id="hamburger-menu">
+                        <img id="menu-toggle" src="images/icons/menu.svg">
+                        <span id="company-name">Praxis Media Studio</span>
+                    </div>
+
+                    <div id="switch-language">
+                        <div class="language ru">
+                            <img src="images/icons/flags/ru.svg">
+                            <span class="name">Русский</span>
+                        </div>
+                        <span></span>
+                        <div class="language en">
+                            <img src="images/icons/flags/en.svg">
+                            <span class="name">English</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <svg id="border-animation-svg">
                 <line class="border-line top" x1="0" y1="0" x2="350" y2="0"/>
                 <line class="border-line left" x1="0" y1="0" x2="0" y2="90"/>
                 <line class="border-line bottom" x1="0" y1="90" x2="350" y2="90"/>
                 <line class="border-line right" x1="350" y1="0" x2="350" y2="90"/>
             </svg>
+
             <div id="name-container">
                 <div id="name">
                     Pra<img src="images/logo-dark.png">is Media
@@ -38,6 +60,10 @@
                 </div>
             </div>
         </div>
+
+        <canvas id="particles">
+
+        </canvas>
     </body>
     <script src="js/bundle/new.js"></script>
 </html>
