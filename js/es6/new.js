@@ -1,5 +1,6 @@
-const Particles = require('particlesjs');
+import { maxBy as _maxBy, forEach as _forEach } from 'lodash';
 import '../../styles/new.less';
+const Particles = require('particlesjs');
 
 const delayClassToggle = (selector, delay) => {
     const elementCollection = document.querySelectorAll(selector);
@@ -10,13 +11,68 @@ const delayClassToggle = (selector, delay) => {
     }, delay);
 };
 
+const iterateNodeCollection = (collection, callback) => {
+    [].forEach.call(collection, (item) => {
+        callback(item);
+    })
+};
+
+const hideActiveElements = (elements) => {
+    iterateNodeCollection(elements, (element) => {
+        console.log('listener attached');
+        element.classList.remove('active');
+    });
+};
+
+const animationMap = [
+    {
+        selector: '#border-animation-svg',
+        delay: 0,
+    },
+    {
+        selector: '.border-line',
+        delay: 100,
+    },
+    {
+        selector: '#name-container',
+        delay: 50,
+    },
+    {
+        selector: '#name',
+        delay: 400,
+    },
+    {
+        selector: '#directions',
+        delay: 500,
+    },
+    {
+        selector: '#header',
+        delay: 300,
+    }
+];
+
+const pageAnimationsLoadPromise = new Promise((resolve, reject) => {
+    _forEach(animationMap, (animation) => {
+        delayClassToggle(animation.selector, animation.delay);
+    });
+    const maxDelayAnimation = _maxBy(animationMap, (animation) => (
+        animation.delay
+    ));
+    setTimeout(() => {
+        resolve();
+    }, maxDelayAnimation.delay + 100);
+});
+
 document.addEventListener('DOMContentLoaded', () => {
-    delayClassToggle('#border-animation-svg', 0);
-    delayClassToggle('.border-line', 100);
-    delayClassToggle('#name-container', 50);
-    delayClassToggle('#name', 400);
-    delayClassToggle('#directions', 500);
-    delayClassToggle('#header', 300);
+    pageAnimationsLoadPromise.then(() => {
+        const directions = document.querySelectorAll('.direction');
+
+        iterateNodeCollection(directions, (direction) => {
+            direction.addEventListener('click', () => {
+                document.querySelector('#container').classList.remove('active');
+            });
+        });
+    });
 
     // Particles.init({
     //     selector: '#particles',
