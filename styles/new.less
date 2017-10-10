@@ -1,7 +1,7 @@
 @import 'variables';
 
 .transition(@duration: .5s, @timing-function: ease-in-out) {
-    transition: all @duration @duration;
+    transition: all @duration @timing-function;
 }
 
 .line-transition(@selector, @offsetX: 0, @offsetY: 0) {
@@ -15,6 +15,7 @@ body {
     padding: 0;
     margin: 0;
     background-color: @c-body-gray;
+    font-family: 'Roboto', sans-serif;
 }
 
 .centered-absolute {
@@ -26,15 +27,37 @@ body {
 
 #direction-ripple {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 1px;
-    height: 1px;
+    z-index: 2;
+    width: 10px;
+    height: 10px;
+    opacity: .8;
+    .transition(.8s, ease-in);
+    transform-origin: 50% 50%;
+    border-radius: 100%;
 
+    &.active {
+        opacity: 1;
+        transform: scale(550);
+    }
+
+    &.web-development {
+        background-color: @c-web-development;
+    }
+
+    &.android-development {
+        background-color: @c-android-development;
+    }
+
+    &.visualization {
+        background-color: @c-visualization;
+    }
+
+    &.design {
+        background-color: @c-design;
+    }
 }
 
 #container {
-    font-family: 'Roboto', sans-serif;
     .centered-absolute;
     width: 100%;
     height: 100%;
@@ -106,7 +129,7 @@ body {
                     justify-content: center;
                     color: @c-text-primary;
                     padding: 5px 12px;
-                    .transition(.1s, ease-in-out);
+                    .transition(.1s, ease-out);
 
                     &:hover {
                         background-color: rgb(230, 230, 230);
@@ -199,7 +222,7 @@ body {
 
             img {
                 position: relative;
-                transform: translateY(5px);
+                transform: translateY(7px);
                 width: 28px;
                 height: 28px;
             }
@@ -259,5 +282,59 @@ body {
         height: 100%;
         background: transparent;
         z-index: 0;
+    }
+}
+
+.page {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    padding: 60px;
+    width: calc(~"100% - 120px");
+    height: auto;
+    opacity: 0;
+    transform: translateY(50px);
+    .transition(.4s, ease-out);
+
+    &.visible {
+        display: block;
+    }
+
+    &.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    &#visualization-page {
+        * {
+            color: @c-text-primary;
+        }
+    }
+
+    .head {
+        width: 100%;
+        padding: 5px 0;
+
+        .title {
+            float: left;
+            font-size: 30px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .close-direction {
+            cursor: pointer;
+            float: right;
+            font-size: 30px;
+            font-weight: bold;
+            color: #fff;
+            transform: rotate(45deg);
+            .transition(.2s, ease-out);
+
+            &:hover {
+                transform: rotate(-45deg);
+            }
+        }
     }
 }

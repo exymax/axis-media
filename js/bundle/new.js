@@ -625,11 +625,11 @@ module.exports = function (css) {
 "use strict";
 
 
-var _lodash = __webpack_require__(26);
+var _lodash = __webpack_require__(23);
 
-__webpack_require__(23);
+__webpack_require__(26);
 
-var Particles = __webpack_require__(25);
+var Particles = __webpack_require__(28);
 
 var delayClassToggle = function delayClassToggle(selector, delay) {
     var elementCollection = document.querySelectorAll(selector);
@@ -686,12 +686,23 @@ var pageAnimationsLoadPromise = new Promise(function (resolve, reject) {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
+    var ripple = document.querySelector('#direction-ripple');
+    var container = document.querySelector('#container');
+
     pageAnimationsLoadPromise.then(function () {
         var directions = document.querySelectorAll('.direction');
 
         iterateNodeCollection(directions, function (direction) {
-            direction.addEventListener('click', function () {
-                document.querySelector('#container').classList.remove('active');
+            direction.addEventListener('mousedown', function (e) {
+                var selectedDirection = direction.getAttribute('data-direction');
+                var directionSelector = '#' + selectedDirection + '-page';
+                var directionPage = document.querySelector(directionSelector);
+                directionPage.classList.add('visible');
+                delayClassToggle(directionSelector, 500);
+                ripple.style.top = e.pageY + 'px';
+                ripple.style.left = e.pageX + 'px';
+                ripple.classList.add('active', selectedDirection);
+                container.classList.remove('active');
             });
         });
     });
@@ -806,66 +817,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /***/ }),
 /* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(24);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
-var transform;
-
-var options = {}
-options.transform = transform
-// add the styles to the DOM
-var update = __webpack_require__(1)(content, options);
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../node_modules/css-loader/index.js??ref--1-1!../node_modules/less-loader/dist/cjs.js!./new.less", function() {
-			var newContent = require("!!../node_modules/css-loader/index.js??ref--1-1!../node_modules/less-loader/dist/cjs.js!./new.less");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, "body {\n  overflow: hidden;\n  padding: 0;\n  margin: 0;\n  background-color: #f5f5f5;\n}\n.centered-absolute {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n#direction-ripple {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 1px;\n  height: 1px;\n}\n#container {\n  font-family: 'Roboto', sans-serif;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  width: 100%;\n  height: 100%;\n  transition: all 0.1s 0.1s;\n  opacity: 0;\n  top: calc(50% + 30px);\n}\n#container.active {\n  top: 50%;\n  opacity: 1;\n}\n#container #header-container {\n  position: absolute;\n  padding: 0 40px;\n  left: 0;\n  top: 0;\n  width: calc(100% - 80px);\n  height: 80px;\n  overflow: hidden;\n}\n#container #header-container #header {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n  position: relative;\n  width: 100%;\n  height: 80px;\n  transform: translateY(90px);\n}\n#container #header-container #header.active {\n  transition: all 0.8s 0.8s;\n  transform: translateY(0);\n}\n#container #header-container #header #hamburger-menu {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n}\n#container #header-container #header #hamburger-menu #menu-toggle {\n  cursor: pointer;\n  width: 20px;\n  height: 30px;\n}\n#container #header-container #header #hamburger-menu #company-name {\n  margin-left: 20px;\n  color: #2c3e50;\n  font-weight: bold;\n}\n#container #header-container #header #switch-language {\n  overflow: hidden;\n  display: flex;\n  flex-direction: row;\n  background-color: #fff;\n  border-radius: 40px;\n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);\n}\n#container #header-container #header #switch-language .language {\n  cursor: pointer;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n  color: #2c3e50;\n  padding: 5px 12px;\n  transition: all 0.1s 0.1s;\n}\n#container #header-container #header #switch-language .language:hover {\n  background-color: #e6e6e6;\n}\n#container #header-container #header #switch-language .language.ru .name {\n  margin-right: 5px;\n}\n#container #header-container #header #switch-language .language.en img {\n  margin-left: 5px;\n}\n#container #header-container #header #switch-language .language:first-child {\n  border-right: 1px solid #f5f5f5;\n}\n#container #header-container #header #switch-language .language img {\n  width: 35px;\n}\n#container #header-container #header #switch-language .language .name {\n  font-size: 13px;\n  margin-left: 5px;\n}\n#container #border-animation-svg {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  width: 350px;\n  height: 90px;\n}\n#container #border-animation-svg.active {\n  transition: all 0.7s 0.7s;\n  top: 45%;\n}\n#container #border-animation-svg line.top {\n  transform: translate(-380px, 0);\n}\n#container #border-animation-svg line.left {\n  transform: translate(0, -120px);\n}\n#container #border-animation-svg line.bottom {\n  transform: translate(380px, 0);\n}\n#container #border-animation-svg line.right {\n  transform: translate(0, 120px);\n}\n#container #border-animation-svg line.top.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line.left.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line.bottom.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line.right.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line {\n  stroke: #2c3e50;\n  stroke-width: 3px;\n  opacity: 0;\n  transition: all 0.7s 0.7s;\n}\n#container #border-animation-svg line.active {\n  opacity: 1;\n}\n#container #name-container {\n  overflow: hidden;\n  width: auto;\n  height: 35px;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  display: none;\n}\n#container #name-container.active {\n  transition: all 0.7s 0.7s;\n  display: block;\n  top: 45%;\n}\n#container #name-container #name {\n  transition: all 0.5s 0.5s;\n  transform: translateY(50px);\n  color: #2c3e50;\n  font-size: 30px;\n}\n#container #name-container #name.active {\n  transform: translateY(-2px);\n}\n#container #name-container #name img {\n  position: relative;\n  transform: translateY(5px);\n  width: 28px;\n  height: 28px;\n}\n#container #directions-container {\n  position: absolute;\n  bottom: 5px;\n  left: 50%;\n  transform: translateX(-50%);\n  height: 100px;\n  overflow: hidden;\n}\n#container #directions-container #directions {\n  position: relative;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n  transform: translateY(120px);\n}\n#container #directions-container #directions.active {\n  transition: all 0.8s 0.8s;\n  transform: translateY(0);\n}\n#container #directions-container #directions .direction {\n  cursor: pointer;\n  margin: 0 20px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  min-width: 100px;\n  text-align: center;\n  font-size: 15px;\n  color: #2c3e50;\n}\n#container #directions-container #directions .direction img {\n  width: 36px;\n  height: 36px;\n}\n#container #directions-container #directions .direction .name {\n  margin-top: 8px;\n}\n#container #particles {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background: transparent;\n  z-index: 0;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * A lightweight, dependency-free and responsive javascript plugin for particle backgrounds.
- * 
- * @author Marc Bruederlin <hello@marcbruederlin.com>
- * @version 2.0.2
- * @license MIT
- * @see https://github.com/marcbruederlin/particles.js
- */
-var Particles=function(t,e){"use strict";var o,i={};return o=function(){function t(){var t=this;t.defaults={responsive:null,selector:null,maxParticles:100,sizeVariations:3,speed:.5,color:"#000000",minDistance:120,connectParticles:!1},t.element=null,t.context=null,t.ratio=null,t.breakpoints=[],t.activeBreakpoint=null,t.breakpointSettings=[],t.originalSettings=null,t.storage=[]}return t}(),o.prototype.init=function(t){var e=this;e.options=e._extend(e.defaults,t),e.options.color=t.color?e._hex2rgb(t.color):e._hex2rgb(e.defaults.color),e.originalSettings=JSON.parse(JSON.stringify(e.options)),e._initializeCanvas(),e._initializeEvents(),e._registerBreakpoints(),e._checkResponsive(),e._initializeStorage(),e._animate()},o.prototype._initializeCanvas=function(){var o,i,n=this;return n.options.selector?(n.element=e.querySelector(n.options.selector),n.context=n.element.getContext("2d"),o=t.devicePixelRatio||1,i=n.context.webkitBackingStorePixelRatio||n.context.mozBackingStorePixelRatio||n.context.msBackingStorePixelRatio||n.context.oBackingStorePixelRatio||n.context.backingStorePixelRatio||1,n.ratio=o/i,n.element.width=t.innerWidth*n.ratio,n.element.height=t.innerHeight*n.ratio,n.element.style.width="100%",n.element.style.height="100%",void n.context.scale(n.ratio,n.ratio)):(console.warn("particles.js: No selector specified! Check https://github.com/marcbruederlin/particles.js#options"),!1)},o.prototype._initializeEvents=function(){var e=this;t.addEventListener("resize",e._resize.bind(e),!1)},o.prototype._initializeStorage=function(){var t=this;t.storage=[];for(var e=t.options.maxParticles;e--;)t.storage.push(new i(t.context,t.options))},o.prototype._registerBreakpoints=function(){var t,e,o,i=this,n=i.options.responsive||null;if("object"==typeof n&&null!==n&&n.length){for(t in n)if(o=i.breakpoints.length-1,e=n[t].breakpoint,n.hasOwnProperty(t)){for(n[t].options.color&&(n[t].options.color=i._hex2rgb(n[t].options.color));o>=0;)i.breakpoints[o]&&i.breakpoints[o]===e&&i.breakpoints.splice(o,1),o--;i.breakpoints.push(e),i.breakpointSettings[e]=n[t].options}i.breakpoints.sort(function(t,e){return e-t})}},o.prototype._checkResponsive=function(){var e,o=this,i=!1,n=t.innerWidth;if(o.options.responsive&&o.options.responsive.length&&null!==o.options.responsive){i=null;for(e in o.breakpoints)o.breakpoints.hasOwnProperty(e)&&n<=o.breakpoints[e]&&(i=o.breakpoints[e]);null!==i?(o.activeBreakpoint=i,o.options=o._extend(o.options,o.breakpointSettings[i])):null!==o.activeBreakpoint&&(o.activeBreakpoint=null,i=null,o.options=o._extend(o.options,o.originalSettings))}},o.prototype._refresh=function(){var t=this;t._initializeStorage(),t._update()},o.prototype._resize=function(){var e=this;e.element.width=t.innerWidth*e.ratio,e.element.height=t.innerHeight*e.ratio,e.context.scale(e.ratio,e.ratio),clearTimeout(e.windowDelay),e.windowDelay=t.setTimeout(function(){e._checkResponsive(),e._refresh()},50)},o.prototype._animate=function(){var e=this;e._draw(),t.requestAnimFrame(e._animate.bind(e))},o.prototype._draw=function(){var t=this;t.context.clearRect(0,0,t.element.width,t.element.height);for(var e=t.storage.length;e--;){var o=t.storage[e];o._draw()}t._update()},o.prototype._update=function(){for(var e=this,o=e.storage.length;o--;){var i=e.storage[o];if(i.x+=i.vx,i.y+=i.vy,i.x+i.radius>t.innerWidth?i.x=i.radius:i.x-i.radius<0&&(i.x=t.innerWidth-i.radius),i.y+i.radius>t.innerHeight?i.y=i.radius:i.y-i.radius<0&&(i.y=t.innerHeight-i.radius),e.options.connectParticles)for(var n=o+1;n<e.storage.length;n++){var r=e.storage[n];e._calculateDistance(i,r)}}},o.prototype._calculateDistance=function(t,e){var o,i=this,n=t.x-e.x,r=t.y-e.y;o=Math.sqrt(n*n+r*r),o<=i.options.minDistance&&(i.context.beginPath(),i.context.strokeStyle="rgba("+i.options.color.r+", "+i.options.color.g+", "+i.options.color.b+", "+(1.2-o/i.options.minDistance)+")",i.context.moveTo(t.x,t.y),i.context.lineTo(e.x,e.y),i.context.stroke(),i.context.closePath())},o.prototype._extend=function(t,e){return Object.keys(e).forEach(function(o){t[o]=e[o]}),t},o.prototype._hex2rgb=function(t){var e=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(t);return e?{r:parseInt(e[1],16),g:parseInt(e[2],16),b:parseInt(e[3],16)}:null},i=function(e,o){var i=this;i.context=e,i.options=o,i.x=Math.random()*t.innerWidth,i.y=Math.random()*t.innerHeight,i.vx=Math.random()*i.options.speed*2-i.options.speed,i.vy=Math.random()*i.options.speed*2-i.options.speed,i.radius=Math.random()*Math.random()*i.options.sizeVariations,i._draw()},i.prototype._draw=function(){var t=this;t.context.fillStyle="rgb("+t.options.color.r+", "+t.options.color.g+", "+t.options.color.b+")",t.context.beginPath(),t.context.arc(t.x,t.y,t.radius,0,2*Math.PI,!1),t.context.fill()},t.requestAnimFrame=function(){return t.requestAnimationFrame||t.webkitRequestAnimationFrame||t.mozRequestAnimationFrame||function(e){t.setTimeout(e,1e3/60)}}(),new o}(window,document);!function(){"use strict"; true?!(__WEBPACK_AMD_DEFINE_RESULT__ = function(){return Particles}.call(exports, __webpack_require__, exports, module),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)):"undefined"!=typeof module&&module.exports?module.exports=Particles:window.Particles=Particles}();
-
-/***/ }),
-/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -17954,10 +17905,10 @@ var Particles=function(t,e){"use strict";var o,i={};return o=function(){function
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(27), __webpack_require__(28)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24), __webpack_require__(25)(module)))
 
 /***/ }),
-/* 27 */
+/* 24 */
 /***/ (function(module, exports) {
 
 var g;
@@ -17984,7 +17935,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 28 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -18010,6 +17961,66 @@ module.exports = function(module) {
 	return module;
 };
 
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(27);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../node_modules/css-loader/index.js??ref--1-1!../node_modules/less-loader/dist/cjs.js!./new.less", function() {
+			var newContent = require("!!../node_modules/css-loader/index.js??ref--1-1!../node_modules/less-loader/dist/cjs.js!./new.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "body {\n  overflow: hidden;\n  padding: 0;\n  margin: 0;\n  background-color: #f5f5f5;\n  font-family: 'Roboto', sans-serif;\n}\n.centered-absolute {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n#direction-ripple {\n  position: absolute;\n  z-index: 2;\n  width: 10px;\n  height: 10px;\n  opacity: .8;\n  transition: all 0.8s ease-in;\n  transform-origin: 50% 50%;\n  border-radius: 100%;\n}\n#direction-ripple.active {\n  opacity: 1;\n  transform: scale(550);\n}\n#direction-ripple.web-development {\n  background-color: #2980b9;\n}\n#direction-ripple.android-development {\n  background-color: #8BC34A;\n}\n#direction-ripple.visualization {\n  background-color: #e6e6e6;\n}\n#direction-ripple.design {\n  background-color: #34495e;\n}\n#container {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  width: 100%;\n  height: 100%;\n  transition: all 0.1s ease-in-out;\n  opacity: 0;\n  top: calc(50% + 30px);\n}\n#container.active {\n  top: 50%;\n  opacity: 1;\n}\n#container #header-container {\n  position: absolute;\n  padding: 0 40px;\n  left: 0;\n  top: 0;\n  width: calc(100% - 80px);\n  height: 80px;\n  overflow: hidden;\n}\n#container #header-container #header {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n  position: relative;\n  width: 100%;\n  height: 80px;\n  transform: translateY(90px);\n}\n#container #header-container #header.active {\n  transition: all 0.8s ease-out;\n  transform: translateY(0);\n}\n#container #header-container #header #hamburger-menu {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n}\n#container #header-container #header #hamburger-menu #menu-toggle {\n  cursor: pointer;\n  width: 20px;\n  height: 30px;\n}\n#container #header-container #header #hamburger-menu #company-name {\n  margin-left: 20px;\n  color: #2c3e50;\n  font-weight: bold;\n}\n#container #header-container #header #switch-language {\n  overflow: hidden;\n  display: flex;\n  flex-direction: row;\n  background-color: #fff;\n  border-radius: 40px;\n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);\n}\n#container #header-container #header #switch-language .language {\n  cursor: pointer;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n  color: #2c3e50;\n  padding: 5px 12px;\n  transition: all 0.1s ease-out;\n}\n#container #header-container #header #switch-language .language:hover {\n  background-color: #e6e6e6;\n}\n#container #header-container #header #switch-language .language.ru .name {\n  margin-right: 5px;\n}\n#container #header-container #header #switch-language .language.en img {\n  margin-left: 5px;\n}\n#container #header-container #header #switch-language .language:first-child {\n  border-right: 1px solid #f5f5f5;\n}\n#container #header-container #header #switch-language .language img {\n  width: 35px;\n}\n#container #header-container #header #switch-language .language .name {\n  font-size: 13px;\n  margin-left: 5px;\n}\n#container #border-animation-svg {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  width: 350px;\n  height: 90px;\n}\n#container #border-animation-svg.active {\n  transition: all 0.7s ease-out;\n  top: 45%;\n}\n#container #border-animation-svg line.top {\n  transform: translate(-380px, 0);\n}\n#container #border-animation-svg line.left {\n  transform: translate(0, -120px);\n}\n#container #border-animation-svg line.bottom {\n  transform: translate(380px, 0);\n}\n#container #border-animation-svg line.right {\n  transform: translate(0, 120px);\n}\n#container #border-animation-svg line.top.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line.left.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line.bottom.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line.right.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line {\n  stroke: #2c3e50;\n  stroke-width: 3px;\n  opacity: 0;\n  transition: all 0.7s ease-in-out;\n}\n#container #border-animation-svg line.active {\n  opacity: 1;\n}\n#container #name-container {\n  overflow: hidden;\n  width: auto;\n  height: 35px;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  display: none;\n}\n#container #name-container.active {\n  transition: all 0.7s ease-out;\n  display: block;\n  top: 45%;\n}\n#container #name-container #name {\n  transition: all 0.5s ease-in-out;\n  transform: translateY(50px);\n  color: #2c3e50;\n  font-size: 30px;\n}\n#container #name-container #name.active {\n  transform: translateY(-2px);\n}\n#container #name-container #name img {\n  position: relative;\n  transform: translateY(7px);\n  width: 28px;\n  height: 28px;\n}\n#container #directions-container {\n  position: absolute;\n  bottom: 5px;\n  left: 50%;\n  transform: translateX(-50%);\n  height: 100px;\n  overflow: hidden;\n}\n#container #directions-container #directions {\n  position: relative;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n  transform: translateY(120px);\n}\n#container #directions-container #directions.active {\n  transition: all 0.8s ease-in-out;\n  transform: translateY(0);\n}\n#container #directions-container #directions .direction {\n  cursor: pointer;\n  margin: 0 20px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  min-width: 100px;\n  text-align: center;\n  font-size: 15px;\n  color: #2c3e50;\n}\n#container #directions-container #directions .direction img {\n  width: 36px;\n  height: 36px;\n}\n#container #directions-container #directions .direction .name {\n  margin-top: 8px;\n}\n#container #particles {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background: transparent;\n  z-index: 0;\n}\n.page {\n  position: absolute;\n  z-index: 3;\n  top: 0;\n  left: 0;\n  padding: 60px;\n  width: calc(100% - 120px);\n  height: auto;\n  opacity: 0;\n  transform: translateY(50px);\n  transition: all 0.4s ease-out;\n}\n.page.visible {\n  display: block;\n}\n.page.active {\n  opacity: 1;\n  transform: translateY(0);\n}\n.page#visualization-page * {\n  color: #2c3e50;\n}\n.page .head {\n  width: 100%;\n  padding: 5px 0;\n}\n.page .head .title {\n  float: left;\n  font-size: 30px;\n  font-weight: bold;\n  color: #fff;\n}\n.page .head .close-direction {\n  cursor: pointer;\n  float: right;\n  font-size: 30px;\n  font-weight: bold;\n  color: #fff;\n  transform: rotate(45deg);\n  transition: all 0.2s ease-out;\n}\n.page .head .close-direction:hover {\n  transform: rotate(-45deg);\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_RESULT__;/*!
+ * A lightweight, dependency-free and responsive javascript plugin for particle backgrounds.
+ * 
+ * @author Marc Bruederlin <hello@marcbruederlin.com>
+ * @version 2.0.2
+ * @license MIT
+ * @see https://github.com/marcbruederlin/particles.js
+ */
+var Particles=function(t,e){"use strict";var o,i={};return o=function(){function t(){var t=this;t.defaults={responsive:null,selector:null,maxParticles:100,sizeVariations:3,speed:.5,color:"#000000",minDistance:120,connectParticles:!1},t.element=null,t.context=null,t.ratio=null,t.breakpoints=[],t.activeBreakpoint=null,t.breakpointSettings=[],t.originalSettings=null,t.storage=[]}return t}(),o.prototype.init=function(t){var e=this;e.options=e._extend(e.defaults,t),e.options.color=t.color?e._hex2rgb(t.color):e._hex2rgb(e.defaults.color),e.originalSettings=JSON.parse(JSON.stringify(e.options)),e._initializeCanvas(),e._initializeEvents(),e._registerBreakpoints(),e._checkResponsive(),e._initializeStorage(),e._animate()},o.prototype._initializeCanvas=function(){var o,i,n=this;return n.options.selector?(n.element=e.querySelector(n.options.selector),n.context=n.element.getContext("2d"),o=t.devicePixelRatio||1,i=n.context.webkitBackingStorePixelRatio||n.context.mozBackingStorePixelRatio||n.context.msBackingStorePixelRatio||n.context.oBackingStorePixelRatio||n.context.backingStorePixelRatio||1,n.ratio=o/i,n.element.width=t.innerWidth*n.ratio,n.element.height=t.innerHeight*n.ratio,n.element.style.width="100%",n.element.style.height="100%",void n.context.scale(n.ratio,n.ratio)):(console.warn("particles.js: No selector specified! Check https://github.com/marcbruederlin/particles.js#options"),!1)},o.prototype._initializeEvents=function(){var e=this;t.addEventListener("resize",e._resize.bind(e),!1)},o.prototype._initializeStorage=function(){var t=this;t.storage=[];for(var e=t.options.maxParticles;e--;)t.storage.push(new i(t.context,t.options))},o.prototype._registerBreakpoints=function(){var t,e,o,i=this,n=i.options.responsive||null;if("object"==typeof n&&null!==n&&n.length){for(t in n)if(o=i.breakpoints.length-1,e=n[t].breakpoint,n.hasOwnProperty(t)){for(n[t].options.color&&(n[t].options.color=i._hex2rgb(n[t].options.color));o>=0;)i.breakpoints[o]&&i.breakpoints[o]===e&&i.breakpoints.splice(o,1),o--;i.breakpoints.push(e),i.breakpointSettings[e]=n[t].options}i.breakpoints.sort(function(t,e){return e-t})}},o.prototype._checkResponsive=function(){var e,o=this,i=!1,n=t.innerWidth;if(o.options.responsive&&o.options.responsive.length&&null!==o.options.responsive){i=null;for(e in o.breakpoints)o.breakpoints.hasOwnProperty(e)&&n<=o.breakpoints[e]&&(i=o.breakpoints[e]);null!==i?(o.activeBreakpoint=i,o.options=o._extend(o.options,o.breakpointSettings[i])):null!==o.activeBreakpoint&&(o.activeBreakpoint=null,i=null,o.options=o._extend(o.options,o.originalSettings))}},o.prototype._refresh=function(){var t=this;t._initializeStorage(),t._update()},o.prototype._resize=function(){var e=this;e.element.width=t.innerWidth*e.ratio,e.element.height=t.innerHeight*e.ratio,e.context.scale(e.ratio,e.ratio),clearTimeout(e.windowDelay),e.windowDelay=t.setTimeout(function(){e._checkResponsive(),e._refresh()},50)},o.prototype._animate=function(){var e=this;e._draw(),t.requestAnimFrame(e._animate.bind(e))},o.prototype._draw=function(){var t=this;t.context.clearRect(0,0,t.element.width,t.element.height);for(var e=t.storage.length;e--;){var o=t.storage[e];o._draw()}t._update()},o.prototype._update=function(){for(var e=this,o=e.storage.length;o--;){var i=e.storage[o];if(i.x+=i.vx,i.y+=i.vy,i.x+i.radius>t.innerWidth?i.x=i.radius:i.x-i.radius<0&&(i.x=t.innerWidth-i.radius),i.y+i.radius>t.innerHeight?i.y=i.radius:i.y-i.radius<0&&(i.y=t.innerHeight-i.radius),e.options.connectParticles)for(var n=o+1;n<e.storage.length;n++){var r=e.storage[n];e._calculateDistance(i,r)}}},o.prototype._calculateDistance=function(t,e){var o,i=this,n=t.x-e.x,r=t.y-e.y;o=Math.sqrt(n*n+r*r),o<=i.options.minDistance&&(i.context.beginPath(),i.context.strokeStyle="rgba("+i.options.color.r+", "+i.options.color.g+", "+i.options.color.b+", "+(1.2-o/i.options.minDistance)+")",i.context.moveTo(t.x,t.y),i.context.lineTo(e.x,e.y),i.context.stroke(),i.context.closePath())},o.prototype._extend=function(t,e){return Object.keys(e).forEach(function(o){t[o]=e[o]}),t},o.prototype._hex2rgb=function(t){var e=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(t);return e?{r:parseInt(e[1],16),g:parseInt(e[2],16),b:parseInt(e[3],16)}:null},i=function(e,o){var i=this;i.context=e,i.options=o,i.x=Math.random()*t.innerWidth,i.y=Math.random()*t.innerHeight,i.vx=Math.random()*i.options.speed*2-i.options.speed,i.vy=Math.random()*i.options.speed*2-i.options.speed,i.radius=Math.random()*Math.random()*i.options.sizeVariations,i._draw()},i.prototype._draw=function(){var t=this;t.context.fillStyle="rgb("+t.options.color.r+", "+t.options.color.g+", "+t.options.color.b+")",t.context.beginPath(),t.context.arc(t.x,t.y,t.radius,0,2*Math.PI,!1),t.context.fill()},t.requestAnimFrame=function(){return t.requestAnimationFrame||t.webkitRequestAnimationFrame||t.mozRequestAnimationFrame||function(e){t.setTimeout(e,1e3/60)}}(),new o}(window,document);!function(){"use strict"; true?!(__WEBPACK_AMD_DEFINE_RESULT__ = function(){return Particles}.call(exports, __webpack_require__, exports, module),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)):"undefined"!=typeof module&&module.exports?module.exports=Particles:window.Particles=Particles}();
 
 /***/ })
 /******/ ]);

@@ -64,12 +64,23 @@ const pageAnimationsLoadPromise = new Promise((resolve, reject) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    const ripple = document.querySelector('#direction-ripple');
+    const container = document.querySelector('#container');
+
     pageAnimationsLoadPromise.then(() => {
         const directions = document.querySelectorAll('.direction');
 
         iterateNodeCollection(directions, (direction) => {
-            direction.addEventListener('click', () => {
-                document.querySelector('#container').classList.remove('active');
+            direction.addEventListener('mousedown', (e) => {
+                const selectedDirection = direction.getAttribute('data-direction');
+                const directionSelector = `#${selectedDirection}-page`;
+                const directionPage = document.querySelector(directionSelector);
+                directionPage.classList.add('visible');
+                delayClassToggle(directionSelector, 500);
+                ripple.style.top = `${e.pageY}px`;
+                ripple.style.left = `${e.pageX}px`;
+                ripple.classList.add('active', selectedDirection);
+                container.classList.remove('active');
             });
         });
     });

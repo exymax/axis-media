@@ -4,7 +4,6 @@
         <title>Praxis Media Studio</title>
     </head>
     <body>
-        <div id="direction-ripple"></div>
         <div id="container" class="active">
             <div id="header-container">
                 <div id="header">
@@ -42,19 +41,19 @@
 
             <div id="directions-container">
                 <div id="directions">
-                    <div class="direction web">
+                    <div class="direction web" data-direction="web-development">
                         <img src="images/icons/web-development.svg">
                         <span class="name">Веб-разработка</span>
                     </div>
-                    <div class="direction android">
+                    <div class="direction android" data-direction="android-development">
                         <img src="images/icons/android-development.svg">
                         <span class="name">Андроид-разработка</span>
                     </div>
-                    <div class="direction visualization">
+                    <div class="direction visualization" data-direction="visualization">
                         <img src="images/icons/visualization.svg">
                         <span class="name">3D-Визуализация</span>
                     </div>
-                    <div class="direction design">
+                    <div class="direction design" data-direction="design">
                         <img src="images/icons/design.svg">
                         <span class="name">Дизайн</span>
                     </div>
@@ -62,9 +61,33 @@
             </div>
         </div>
 
-        <canvas id="particles">
+        <div id="direction-ripple"></div>
 
-        </canvas>
+        <div class="page" id="web-development-page">
+            <div class="head">
+                <span class="title">Веб-разработка</span>
+                <span class="close-direction">+</span>
+            </div>
+        </div>
+        <div class="page" id="android-development-page">
+            <div class="head">
+                <span class="title">Андроид-разработка</span>
+                <span class="close-direction">+</span>
+            </div>
+        </div>
+        <div class="page" id="visualization-page">
+            <div class="head">
+                <span class="title">Визуализация</span>
+                <span class="close-direction">+</span>
+            </div>
+        </div>
+        <div class="page" id="design-page">
+            <div class="head">
+                <span class="title">Дизайн</span>
+                <span class="close-direction">+</span>
+            </div>
+        </div>
+
     </body>
     <script src="js/bundle/new.js"></script>
 </html>
