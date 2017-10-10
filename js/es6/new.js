@@ -60,30 +60,60 @@ const pageAnimationsLoadPromise = new Promise((resolve, reject) => {
     ));
     setTimeout(() => {
         resolve();
-    }, maxDelayAnimation.delay + 100);
+    }, maxDelayAnimation.delay + 50);
 });
 
 document.addEventListener('DOMContentLoaded', () => {
     const ripple = document.querySelector('#direction-ripple');
     const container = document.querySelector('#container');
 
-    pageAnimationsLoadPromise.then(() => {
-        const directions = document.querySelectorAll('.direction');
+    const directions = document.querySelectorAll('.direction');
+    const directionPages = document.querySelectorAll('.page');
+    let activeDirectionPage = null;
+    let activeDirectionName = null;
+    const directionPageCloseButtons = document.querySelectorAll('.page .head .close-direction');
 
-        iterateNodeCollection(directions, (direction) => {
-            direction.addEventListener('mousedown', (e) => {
+    iterateNodeCollection(directions, (direction) => {
+        direction.addEventListener('mousedown', (e) => {
+            ripple.style.top = `${e.pageY}px`;
+            ripple.style.left = `${e.pageX}px`;
+            setTimeout(() => {
                 const selectedDirection = direction.getAttribute('data-direction');
                 const directionSelector = `#${selectedDirection}-page`;
                 const directionPage = document.querySelector(directionSelector);
+                activeDirectionName = selectedDirection;
+                activeDirectionPage = directionPage;
                 directionPage.classList.add('visible');
                 delayClassToggle(directionSelector, 500);
-                ripple.style.top = `${e.pageY}px`;
-                ripple.style.left = `${e.pageX}px`;
                 ripple.classList.add('active', selectedDirection);
                 container.classList.remove('active');
-            });
+            }, 100);
         });
     });
+
+    iterateNodeCollection(directionPageCloseButtons, (directionCloseButton) => {
+        directionCloseButton.addEventListener('mousedown', () => {
+            activeDirectionPage.classList.remove('active');
+            setTimeout(() => {
+                activeDirectionPage.classList.remove('visible');
+                activeDirectionPage = null;
+            }, 450);
+            ripple.classList.remove('active');
+            setTimeout(() => {
+                ripple.style.top = '0';
+                ripple.style.left = '0';
+                ripple.classList.remove(activeDirectionName);
+                ripple.removeAttribute('style');
+                activeDirectionName = null;
+            }, 800);
+            setTimeout(() => {
+                container.classList.add('active');
+            }, 500);
+        });
+    });
+
+    // pageAnimationsLoadPromise.then(() => {
+    // });
 
     // Particles.init({
     //     selector: '#particles',

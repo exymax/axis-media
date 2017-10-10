@@ -30,14 +30,15 @@ body {
     z-index: 2;
     width: 10px;
     height: 10px;
-    opacity: .8;
-    .transition(.8s, ease-in);
-    transform-origin: 50% 50%;
-    border-radius: 100%;
+    opacity: 0;
+    .transition(.7s, ease-out);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
 
     &.active {
+        width: 3000px;
+        height: 3000px;
         opacity: 1;
-        transform: scale(550);
     }
 
     &.web-development {
@@ -103,7 +104,7 @@ body {
                 #menu-toggle {
                     cursor: pointer;
                     width: 20px;
-                    height: 30px;
+                    height: 20px;
                 }
 
                 #company-name {
@@ -200,7 +201,7 @@ body {
     #name-container {
         overflow: hidden;
         width: auto;
-        height: 35px;
+        height: 38px;
         .centered-absolute;
         display: none;
 
@@ -214,7 +215,7 @@ body {
             .transition;
             transform: translateY(50px);
             color: @c-text-primary;
-            font-size: 30px;
+            font-size: 33px;
 
             &.active {
                 transform: translateY(-2px);
@@ -222,9 +223,9 @@ body {
 
             img {
                 position: relative;
-                transform: translateY(7px);
-                width: 28px;
-                height: 28px;
+                transform: translateY(5px);
+                width: 29px;
+                height: 29px;
             }
         }
     }
@@ -302,6 +303,7 @@ body {
     }
 
     &.active {
+        z-index: 4;
         opacity: 1;
         transform: translateY(0);
     }
