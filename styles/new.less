@@ -14,7 +14,7 @@ body {
     overflow: hidden;
     padding: 0;
     margin: 0;
-    background-color: @c-body-gray;
+    background-color: @c-body;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -34,6 +34,7 @@ body {
     .transition(.7s, ease-out);
     transform: translate(-50%, -50%);
     border-radius: 50%;
+    background-color: @c-text-primary;
 
     &.active {
         width: 3500px;
@@ -41,21 +42,21 @@ body {
         opacity: 1;
     }
 
-    &.web-development {
-        background-color: @c-web-development;
-    }
-
-    &.android-development {
-        background-color: @c-android-development;
-    }
-
-    &.visualization {
-        background-color: @c-visualization;
-    }
-
-    &.design {
-        background-color: @c-design;
-    }
+    // &.web-development {
+    //     background-color: @c-web-development;
+    // }
+    //
+    // &.android-development {
+    //     background-color: @c-android-development;
+    // }
+    //
+    // &.visualization {
+    //     background-color: @c-visualization;
+    // }
+    //
+    // &.design {
+    //     background-color: @c-design;
+    // }
 }
 
 #container {
@@ -118,9 +119,7 @@ body {
                 overflow: hidden;
                 display: flex;
                 flex-direction: row;
-                background-color: #fff;
-                border-radius: 40px;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+                color: @c-text-primary;
 
                 .language {
                     cursor: pointer;
@@ -128,32 +127,22 @@ body {
                     flex-direction: row;
                     align-items: center;
                     justify-content: center;
-                    color: @c-text-primary;
                     padding: 5px 12px;
-                    .transition(.1s, ease-out);
-
-                    &:hover {
-                        background-color: rgb(230, 230, 230);
-                    }
 
                     &.ru {
                         .name {
-                            margin-right: 5px;
+                            margin-right: 3px;
+                        }
+
+                        &+span {
+                            font-size: 22px;
                         }
                     }
 
                     &.en {
-                        img {
-                            margin-left: 5px;
+                        .name {
+                            margin-left: 3px;
                         }
-                    }
-
-                    &:first-child {
-                        border-right: 1px solid @c-body-gray;
-                    }
-
-                    img {
-                        width: 35px;
                     }
 
                     .name {
@@ -253,7 +242,7 @@ body {
 
             .direction {
                 cursor: pointer;
-                margin: 0 20px;
+                margin: 10px 20px 0 20px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -273,6 +262,7 @@ body {
                     width: 36px;
                     height: 36px;
                     .transition(.2s, ease-out);
+
                 }
 
                 .name {
@@ -302,6 +292,7 @@ body {
     width: calc(~"100% - 120px");
     height: auto;
     opacity: 0;
+    display: none;
     transform: translateY(50px);
     .transition(.4s, ease-out);
 
@@ -315,12 +306,6 @@ body {
         transform: translateY(0);
     }
 
-    &#visualization-page {
-        * {
-            color: @c-text-primary;
-        }
-    }
-
     .head {
         width: 100%;
         padding: 5px 0;
@@ -329,7 +314,7 @@ body {
             float: left;
             font-size: 30px;
             font-weight: bold;
-            color: #fff;
+            color: @c-text-direction;
         }
 
         .close-direction {
@@ -337,7 +322,7 @@ body {
             float: right;
             font-size: 30px;
             font-weight: bold;
-            color: #fff;
+            color: @c-text-direction;
             transform: rotate(45deg);
             .transition(.2s, ease-out);
 
