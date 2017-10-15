@@ -1,3 +1,4 @@
+import {initStars} from './services/stars';
 import { maxBy as _maxBy, forEach as _forEach } from 'lodash';
 import '../../styles/new.less';
 const Particles = require('particlesjs');
@@ -72,6 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeDirectionPage = null;
     let activeDirectionName = null;
     const directionPageCloseButtons = document.querySelectorAll('.page .head .close-direction');
+
+    initStars();
 
     iterateNodeCollection(directions, (direction) => {
         direction.addEventListener('mousedown', (e) => {
