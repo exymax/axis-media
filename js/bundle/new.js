@@ -625,13 +625,13 @@ module.exports = function (css) {
 "use strict";
 
 
-var _stars = __webpack_require__(29);
+var _stars = __webpack_require__(23);
 
-var _lodash = __webpack_require__(23);
+var _lodash = __webpack_require__(25);
 
-__webpack_require__(26);
+__webpack_require__(28);
 
-var Particles = __webpack_require__(28);
+var Particles = __webpack_require__(30);
 
 var delayClassToggle = function delayClassToggle(selector, delay) {
     var elementCollection = document.querySelectorAll(selector);
@@ -688,7 +688,6 @@ var pageAnimationsLoadPromise = new Promise(function (resolve, reject) {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    var ripple = document.querySelector('#direction-ripple');
     var container = document.querySelector('#container');
 
     var directions = document.querySelectorAll('.direction');
@@ -700,9 +699,7 @@ document.addEventListener('DOMContentLoaded', function () {
     (0, _stars.initStars)();
 
     iterateNodeCollection(directions, function (direction) {
-        direction.addEventListener('mousedown', function (e) {
-            ripple.style.top = e.pageY + 'px';
-            ripple.style.left = e.pageX + 'px';
+        direction.addEventListener('mousedown', function () {
             setTimeout(function () {
                 var selectedDirection = direction.getAttribute('data-direction');
                 var directionSelector = '#' + selectedDirection + '-page';
@@ -711,7 +708,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 activeDirectionPage = directionPage;
                 directionPage.classList.add('visible');
                 delayClassToggle(directionSelector, 500);
-                ripple.classList.add('active', selectedDirection);
                 container.classList.remove('active');
             }, 100);
         });
@@ -724,12 +720,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 activeDirectionPage.classList.remove('visible');
                 activeDirectionPage = null;
             }, 450);
-            ripple.classList.remove('active');
             setTimeout(function () {
-                ripple.style.top = '0';
-                ripple.style.left = '0';
-                ripple.classList.remove(activeDirectionName);
-                ripple.removeAttribute('style');
                 activeDirectionName = null;
             }, 800);
             setTimeout(function () {
@@ -737,120 +728,828 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 500);
         });
     });
-
-    // pageAnimationsLoadPromise.then(() => {
-    // });
-
-    // Particles.init({
-    //     selector: '#particles',
-    //     "particles": {
-    //         "number": {
-    //             "value": 355,
-    //             "density": {
-    //                 "enable": true,
-    //                 "value_area": 789.1476416322727
-    //             }
-    //         },
-    //         "color": {
-    //             "value": "#ffffff"
-    //         },
-    //         "shape": {
-    //             "type": "circle",
-    //             "stroke": {
-    //                 "width": 0,
-    //                 "color": "#000000"
-    //             },
-    //             "polygon": {
-    //                 "nb_sides": 5
-    //             }
-    //         },
-    //         "opacity": {
-    //             "value": 0.48927153781200905,
-    //             "random": false,
-    //             "anim": {
-    //                 "enable": true,
-    //                 "speed": 0.2,
-    //                 "opacity_min": 0,
-    //                 "sync": false
-    //             }
-    //         },
-    //         "size": {
-    //             "value": 2,
-    //             "random": true,
-    //             "anim": {
-    //                 "enable": true,
-    //                 "speed": 2,
-    //                 "size_min": 0,
-    //                 "sync": false
-    //             }
-    //         },
-    //         "line_linked": {
-    //             "enable": false,
-    //             "distance": 150,
-    //             "color": "#ffffff",
-    //             "opacity": 0.4,
-    //             "width": 1
-    //         },
-    //         "move": {
-    //             "enable": true,
-    //             "speed": 0.2,
-    //             "direction": "none",
-    //             "random": true,
-    //             "straight": false,
-    //             "out_mode": "out",
-    //             "bounce": false,
-    //             "attract": {
-    //                 "enable": false,
-    //                 "rotateX": 600,
-    //                 "rotateY": 1200
-    //             }
-    //         }
-    //     },
-    //     "interactivity": {
-    //         "detect_on": "canvas",
-    //         "events": {
-    //             "onhover": {
-    //                 "enable": true,
-    //                 "mode": "bubble"
-    //             },
-    //             "onclick": {
-    //                 "enable": true,
-    //                 "mode": "push"
-    //             },
-    //             "resize": true
-    //         },
-    //         "modes": {
-    //             "grab": {
-    //                 "distance": 400,
-    //                 "line_linked": {
-    //                     "opacity": 1
-    //                 }
-    //             },
-    //             "bubble": {
-    //                 "distance": 83.91608391608392,
-    //                 "size": 1,
-    //                 "duration": 3,
-    //                 "opacity": 1,
-    //                 "speed": 3
-    //             },
-    //             "repulse": {
-    //                 "distance": 200,
-    //                 "duration": 0.4
-    //             },
-    //             "push": {
-    //                 "particles_nb": 4
-    //             },
-    //             "remove": {
-    //                 "particles_nb": 2
-    //             }
-    //         }
-    //     },
-    //     "retina_detect": true
-    // });
 });
 
 /***/ }),
 /* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.initStars = initStars;
+
+var _delaunayFast = __webpack_require__(24);
+
+var Delaunay = _interopRequireWildcard(_delaunayFast);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function initStars() {
+    /**
+     * Stars
+     * Inspired by Steve Courtney's poster art for Celsius GS's Drifter - http://celsiusgs.com/drifter/posters.php
+     * by Cory Hughart - http://coryhughart.com
+     */
+    // Settings
+    var particleCount = 40,
+        flareCount = 10,
+        motion = 0.05,
+        tilt = 0.05,
+        color = '#FFEED4',
+        particleSizeBase = 1,
+        particleSizeMultiplier = 0.5,
+        flareSizeBase = 100,
+        flareSizeMultiplier = 100,
+        lineWidth = 1,
+        linkChance = 75,
+        // chance per frame of link, higher = smaller chance
+    linkLengthMin = 5,
+        // min linked vertices
+    linkLengthMax = 7,
+        // max linked vertices
+    linkOpacity = 0.25,
+        // number between 0 & 1
+    linkFade = 90,
+        // link fade-out frames
+    linkSpeed = 1,
+        // distance a link travels in 1 frame
+    glareAngle = -60,
+        glareOpacityMultiplier = 0.05,
+        renderParticles = true,
+        renderParticleGlare = true,
+        renderFlares = true,
+        renderLinks = true,
+        renderMesh = false,
+        flicker = true,
+        flickerSmoothing = 15,
+        // higher = smoother flicker
+    blurSize = 0,
+        orbitTilt = true,
+        randomMotion = true,
+        noiseLength = 1000,
+        noiseStrength = 1;
+
+    var canvas = document.getElementById('stars'),
+
+    //orbits = document.getElementById('orbits'),
+    context = canvas.getContext('2d'),
+        mouse = { x: 0, y: 0 },
+        m = {},
+        r = 0,
+        c = 1000,
+        // multiplier for delaunay points, since floats too small can mess up the algorithm
+    n = 0,
+        nAngle = Math.PI * 2 / noiseLength,
+        nRad = 100,
+        nScale = 0.5,
+        nPos = { x: 0, y: 0 },
+        points = [],
+        vertices = [],
+        triangles = [],
+        links = [],
+        particles = [],
+        flares = [];
+
+    function init() {
+        var i, j, k;
+
+        // requestAnimFrame polyfill
+        window.requestAnimFrame = function () {
+            return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
+                window.setTimeout(callback, 1000 / 60);
+            };
+        }();
+
+        // Fade in background
+        /*
+        var background = document.getElementById('background'),
+        	bgImg = new Image(),
+        	bgURL = '/img/background.jpg';
+        bgImg.onload = function() {
+        	//console.log('background loaded');
+        	background.style.backgroundImage = 'url("'+bgURL+'")';
+        	background.className += ' loaded';
+        }
+        bgImg.src = bgURL;
+        */
+
+        // Size canvas
+        resize();
+
+        mouse.x = canvas.clientWidth / 2;
+        mouse.y = canvas.clientHeight / 2;
+
+        // Create particle positions
+        for (i = 0; i < particleCount; i++) {
+            var p = new Particle();
+            particles.push(p);
+            points.push([p.x * c, p.y * c]);
+        }
+
+        //console.log(JSON.stringify(points));
+
+        // Delaunay triangulation
+        //var Delaunay = require('delaunay-fast');
+        vertices = Delaunay.triangulate(points);
+        //console.log(JSON.stringify(vertices));
+        // Create an array of "triangles" (groups of 3 indices)
+        var tri = [];
+        for (i = 0; i < vertices.length; i++) {
+            if (tri.length == 3) {
+                triangles.push(tri);
+                tri = [];
+            }
+            tri.push(vertices[i]);
+        }
+        //console.log(JSON.stringify(triangles));
+
+        // Tell all the particles who their neighbors are
+        for (i = 0; i < particles.length; i++) {
+            // Loop through all tirangles
+            for (j = 0; j < triangles.length; j++) {
+                // Check if this particle's index is in this triangle
+                k = triangles[j].indexOf(i);
+                // If it is, add its neighbors to the particles contacts list
+                if (k !== -1) {
+                    triangles[j].forEach(function (value, index, array) {
+                        if (value !== i && particles[i].neighbors.indexOf(value) == -1) {
+                            particles[i].neighbors.push(value);
+                        }
+                    });
+                }
+            }
+        }
+        //console.log(JSON.stringify(particles));
+
+        if (renderFlares) {
+            // Create flare positions
+            for (i = 0; i < flareCount; i++) {
+                flares.push(new Flare());
+            }
+        }
+
+        // Motion mode
+        //if (Modernizr && Modernizr.deviceorientation) {
+        if ('ontouchstart' in document.documentElement && window.DeviceOrientationEvent) {
+            console.log('Using device orientation');
+            window.addEventListener('deviceorientation', function (e) {
+                mouse.x = canvas.clientWidth / 2 - e.gamma / 90 * (canvas.clientWidth / 2) * 2;
+                mouse.y = canvas.clientHeight / 2 - e.beta / 90 * (canvas.clientHeight / 2) * 2;
+                //console.log('Center: x:'+(canvas.clientWidth/2)+' y:'+(canvas.clientHeight/2));
+                //console.log('Orientation: x:'+mouse.x+' ('+e.gamma+') y:'+mouse.y+' ('+e.beta+')');
+            }, true);
+        } else {
+            // Mouse move listener
+            console.log('Using mouse movement');
+            document.body.addEventListener('mousemove', function (e) {
+                //console.log('moved');
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+        }
+
+        // Random motion
+        if (randomMotion) {}
+        //var SimplexNoise = require('simplex-noise');
+        //var simplex = new SimplexNoise();
+
+
+        // Animation loop
+        (function animloop() {
+            requestAnimFrame(animloop);
+            resize();
+            render();
+        })();
+    }
+
+    function render() {
+        if (randomMotion) {
+            n++;
+            if (n >= noiseLength) {
+                n = 0;
+            }
+
+            nPos = noisePoint(n);
+            //console.log('NOISE x:'+nPos.x+' y:'+nPos.y);
+        }
+
+        // Clear
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (blurSize > 0) {
+            context.shadowBlur = blurSize;
+            context.shadowColor = color;
+        }
+
+        if (renderParticles) {
+            // Render particles
+            for (var i = 0; i < particleCount; i++) {
+                particles[i].render();
+            }
+        }
+
+        if (renderMesh) {
+            // Render all lines
+            context.beginPath();
+            for (var v = 0; v < vertices.length - 1; v++) {
+                // Splits the array into triplets
+                if ((v + 1) % 3 === 0) {
+                    continue;
+                }
+
+                var p1 = particles[vertices[v]],
+                    p2 = particles[vertices[v + 1]];
+
+                //console.log('Line: '+p1.x+','+p1.y+'->'+p2.x+','+p2.y);
+
+                var pos1 = position(p1.x, p1.y, p1.z),
+                    pos2 = position(p2.x, p2.y, p2.z);
+
+                context.moveTo(pos1.x, pos1.y);
+                context.lineTo(pos2.x, pos2.y);
+            }
+            context.strokeStyle = color;
+            context.lineWidth = lineWidth;
+            context.stroke();
+            context.closePath();
+        }
+
+        if (renderLinks) {
+            // Possibly start a new link
+            if (random(0, linkChance) == linkChance) {
+                var length = random(linkLengthMin, linkLengthMax);
+                var start = random(0, particles.length - 1);
+                startLink(start, length);
+            }
+
+            // Render existing links
+            // Iterate in reverse so that removing items doesn't affect the loop
+            for (var l = links.length - 1; l >= 0; l--) {
+                if (links[l] && !links[l].finished) {
+                    links[l].render();
+                } else {
+                    delete links[l];
+                }
+            }
+        }
+
+        if (renderFlares) {
+            // Render flares
+            for (var j = 0; j < flareCount; j++) {
+                flares[j].render();
+            }
+        }
+
+        /*
+        if (orbitTilt) {
+        	var tiltX = -(((canvas.clientWidth / 2) - mouse.x + ((nPos.x - 0.5) * noiseStrength)) * tilt),
+        		tiltY = (((canvas.clientHeight / 2) - mouse.y + ((nPos.y - 0.5) * noiseStrength)) * tilt);
+         		orbits.style.transform = 'rotateY('+tiltX+'deg) rotateX('+tiltY+'deg)';
+        }
+        */
+    }
+
+    function resize() {
+        canvas.width = window.innerWidth * (window.devicePixelRatio || 1);
+        canvas.height = canvas.width * (canvas.clientHeight / canvas.clientWidth);
+    }
+
+    function startLink(vertex, length) {
+        //console.log('LINK from '+vertex+' (length '+length+')');
+        links.push(new Link(vertex, length));
+    }
+
+    // Particle class
+    var Particle = function Particle() {
+        this.x = random(-0.1, 1.1, true);
+        this.y = random(-0.1, 1.1, true);
+        this.z = random(0, 4);
+        this.color = color;
+        this.opacity = random(0.1, 1, true);
+        this.flicker = 0;
+        this.neighbors = []; // placeholder for neighbors
+    };
+    Particle.prototype.render = function () {
+        var pos = position(this.x, this.y, this.z),
+            r = (this.z * particleSizeMultiplier + particleSizeBase) * (sizeRatio() / 1000),
+            o = this.opacity;
+
+        if (flicker) {
+            var newVal = random(-0.5, 0.5, true);
+            this.flicker += (newVal - this.flicker) / flickerSmoothing;
+            if (this.flicker > 0.5) this.flicker = 0.5;
+            if (this.flicker < -0.5) this.flicker = -0.5;
+            o += this.flicker;
+            if (o > 1) o = 1;
+            if (o < 0) o = 0;
+        }
+
+        context.fillStyle = this.color;
+        context.globalAlpha = o;
+        context.beginPath();
+        context.arc(pos.x, pos.y, r, 0, 2 * Math.PI, false);
+        context.fill();
+        context.closePath();
+
+        if (renderParticleGlare) {
+            context.globalAlpha = o * glareOpacityMultiplier;
+            /*
+            context.ellipse(pos.x, pos.y, r * 30, r, 90 * (Math.PI / 180), 0, 2 * Math.PI, false);
+            context.fill();
+            context.closePath();
+            */
+            context.ellipse(pos.x, pos.y, r * 100, r, (glareAngle - (nPos.x - 0.5) * noiseStrength * motion) * (Math.PI / 180), 0, 2 * Math.PI, false);
+            context.fill();
+            context.closePath();
+        }
+
+        context.globalAlpha = 1;
+    };
+
+    // Flare class
+    var Flare = function Flare() {
+        this.x = random(-0.25, 1.25, true);
+        this.y = random(-0.25, 1.25, true);
+        this.z = random(0, 2);
+        this.color = color;
+        this.opacity = random(0.001, 0.01, true);
+    };
+    Flare.prototype.render = function () {
+        var pos = position(this.x, this.y, this.z),
+            r = (this.z * flareSizeMultiplier + flareSizeBase) * (sizeRatio() / 1000);
+
+        // Feathered circles
+        /*
+        var grad = context.createRadialGradient(x+r,y+r,0,x+r,y+r,r);
+        grad.addColorStop(0, 'rgba(255,255,255,'+f.o+')');
+        grad.addColorStop(0.8, 'rgba(255,255,255,'+f.o+')');
+        grad.addColorStop(1, 'rgba(255,255,255,0)');
+        context.fillStyle = grad;
+        context.beginPath();
+        context.fillRect(x, y, r*2, r*2);
+        context.closePath();
+        */
+
+        context.beginPath();
+        context.globalAlpha = this.opacity;
+        context.arc(pos.x, pos.y, r, 0, 2 * Math.PI, false);
+        context.fillStyle = this.color;
+        context.fill();
+        context.closePath();
+        context.globalAlpha = 1;
+    };
+
+    // Link class
+    var Link = function Link(startVertex, numPoints) {
+        this.length = numPoints;
+        this.verts = [startVertex];
+        this.stage = 0;
+        this.linked = [startVertex];
+        this.distances = [];
+        this.traveled = 0;
+        this.fade = 0;
+        this.finished = false;
+    };
+    Link.prototype.render = function () {
+        // Stages:
+        // 0. Vertex collection
+        // 1. Render line reaching from vertex to vertex
+        // 2. Fade out
+        // 3. Finished (delete me)
+
+        var i, p, pos, points;
+
+        switch (this.stage) {
+            // VERTEX COLLECTION STAGE
+            case 0:
+
+                // Grab the last member of the link
+                var last = particles[this.verts[this.verts.length - 1]];
+                //console.log(JSON.stringify(last));
+                if (last && last.neighbors && last.neighbors.length > 0) {
+                    // Grab a random neighbor
+                    var neighbor = last.neighbors[random(0, last.neighbors.length - 1)];
+                    // If we haven't seen that particle before, add it to the link
+                    if (this.verts.indexOf(neighbor) == -1) {
+                        this.verts.push(neighbor);
+                    }
+                    // If we have seen that particle before, we'll just wait for the next frame
+                } else {
+                    //console.log(this.verts[0]+' prematurely moving to stage 3 (0)');
+                    this.stage = 3;
+                    this.finished = true;
+                }
+
+                if (this.verts.length >= this.length) {
+                    // Calculate all distances at once
+                    for (i = 0; i < this.verts.length - 1; i++) {
+                        var p1 = particles[this.verts[i]],
+                            p2 = particles[this.verts[i + 1]],
+                            dx = p1.x - p2.x,
+                            dy = p1.y - p2.y,
+                            dist = Math.sqrt(dx * dx + dy * dy);
+
+                        this.distances.push(dist);
+                    }
+                    //console.log('Distances: '+JSON.stringify(this.distances));
+                    //console.log('verts: '+this.verts.length+' distances: '+this.distances.length);
+
+                    //console.log(this.verts[0]+' moving to stage 1');
+                    this.stage = 1;
+                }
+                break;
+
+            // RENDER LINE ANIMATION STAGE
+            case 1:
+                if (this.distances.length > 0) {
+
+                    points = [];
+                    //var a = 1;
+
+                    // Gather all points already linked
+                    for (i = 0; i < this.linked.length; i++) {
+                        p = particles[this.linked[i]];
+                        pos = position(p.x, p.y, p.z);
+                        points.push([pos.x, pos.y]);
+                    }
+
+                    var linkSpeedRel = linkSpeed * 0.00001 * canvas.width;
+                    this.traveled += linkSpeedRel;
+                    var d = this.distances[this.linked.length - 1];
+                    // Calculate last point based on linkSpeed and distance travelled to next point
+                    if (this.traveled >= d) {
+                        this.traveled = 0;
+                        // We've reached the next point, add coordinates to array
+                        //console.log(this.verts[0]+' reached vertex '+(this.linked.length+1)+' of '+this.verts.length);
+
+                        this.linked.push(this.verts[this.linked.length]);
+                        p = particles[this.linked[this.linked.length - 1]];
+                        pos = position(p.x, p.y, p.z);
+                        points.push([pos.x, pos.y]);
+
+                        if (this.linked.length >= this.verts.length) {
+                            //console.log(this.verts[0]+' moving to stage 2 (1)');
+                            this.stage = 2;
+                        }
+                    } else {
+                        // We're still travelling to the next point, get coordinates at travel distance
+                        // http://math.stackexchange.com/a/85582
+                        var a = particles[this.linked[this.linked.length - 1]],
+                            b = particles[this.verts[this.linked.length]],
+                            t = d - this.traveled,
+                            x = (this.traveled * b.x + t * a.x) / d,
+                            y = (this.traveled * b.y + t * a.y) / d,
+                            z = (this.traveled * b.z + t * a.z) / d;
+
+                        pos = position(x, y, z);
+
+                        //console.log(this.verts[0]+' traveling to vertex '+(this.linked.length+1)+' of '+this.verts.length+' ('+this.traveled+' of '+this.distances[this.linked.length]+')');
+
+                        points.push([pos.x, pos.y]);
+                    }
+
+                    this.drawLine(points);
+                } else {
+                    //console.log(this.verts[0]+' prematurely moving to stage 3 (1)');
+                    this.stage = 3;
+                    this.finished = true;
+                }
+                break;
+
+            // FADE OUT STAGE
+            case 2:
+                if (this.verts.length > 1) {
+                    if (this.fade < linkFade) {
+                        this.fade++;
+
+                        // Render full link between all vertices and fade over time
+                        points = [];
+                        var alpha = (1 - this.fade / linkFade) * linkOpacity;
+                        for (i = 0; i < this.verts.length; i++) {
+                            p = particles[this.verts[i]];
+                            pos = position(p.x, p.y, p.z);
+                            points.push([pos.x, pos.y]);
+                        }
+                        this.drawLine(points, alpha);
+                    } else {
+                        //console.log(this.verts[0]+' moving to stage 3 (2a)');
+                        this.stage = 3;
+                        this.finished = true;
+                    }
+                } else {
+                    //console.log(this.verts[0]+' prematurely moving to stage 3 (2b)');
+                    this.stage = 3;
+                    this.finished = true;
+                }
+                break;
+
+            // FINISHED STAGE
+            case 3:
+            default:
+                this.finished = true;
+                break;
+        }
+    };
+    Link.prototype.drawLine = function (points, alpha) {
+        if (typeof alpha !== 'number') alpha = linkOpacity;
+
+        if (points.length > 1 && alpha > 0) {
+            //console.log(this.verts[0]+': Drawing line '+alpha);
+            context.globalAlpha = alpha;
+            context.beginPath();
+            for (var i = 0; i < points.length - 1; i++) {
+                context.moveTo(points[i][0], points[i][1]);
+                context.lineTo(points[i + 1][0], points[i + 1][1]);
+            }
+            context.strokeStyle = color;
+            context.lineWidth = lineWidth;
+            context.stroke();
+            context.closePath();
+            context.globalAlpha = 1;
+        }
+    };
+
+    // Utils
+
+    function noisePoint(i) {
+        var a = nAngle * i,
+            cosA = Math.cos(a),
+            sinA = Math.sin(a),
+
+        //value = simplex.noise2D(nScale * cosA + nScale, nScale * sinA + nScale),
+        //rad = nRad + value;
+        rad = nRad;
+        return {
+            x: rad * cosA,
+            y: rad * sinA
+        };
+    }
+
+    function position(x, y, z) {
+        return {
+            x: x * canvas.width + (canvas.width / 2 - mouse.x + (nPos.x - 0.5) * noiseStrength) * z * motion,
+            y: y * canvas.height + (canvas.height / 2 - mouse.y + (nPos.y - 0.5) * noiseStrength) * z * motion
+        };
+    }
+
+    function sizeRatio() {
+        return canvas.width >= canvas.height ? canvas.width : canvas.height;
+    }
+
+    function random(min, max, float) {
+        return float ? Math.random() * (max - min) + min : Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // init
+    if (canvas) init();
+}
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Delaunay;
+
+(function() {
+  "use strict";
+
+  var EPSILON = 1.0 / 1048576.0;
+
+  function supertriangle(vertices) {
+    var xmin = Number.POSITIVE_INFINITY,
+        ymin = Number.POSITIVE_INFINITY,
+        xmax = Number.NEGATIVE_INFINITY,
+        ymax = Number.NEGATIVE_INFINITY,
+        i, dx, dy, dmax, xmid, ymid;
+
+    for(i = vertices.length; i--; ) {
+      if(vertices[i][0] < xmin) xmin = vertices[i][0];
+      if(vertices[i][0] > xmax) xmax = vertices[i][0];
+      if(vertices[i][1] < ymin) ymin = vertices[i][1];
+      if(vertices[i][1] > ymax) ymax = vertices[i][1];
+    }
+
+    dx = xmax - xmin;
+    dy = ymax - ymin;
+    dmax = Math.max(dx, dy);
+    xmid = xmin + dx * 0.5;
+    ymid = ymin + dy * 0.5;
+
+    return [
+      [xmid - 20 * dmax, ymid -      dmax],
+      [xmid            , ymid + 20 * dmax],
+      [xmid + 20 * dmax, ymid -      dmax]
+    ];
+  }
+
+  function circumcircle(vertices, i, j, k) {
+    var x1 = vertices[i][0],
+        y1 = vertices[i][1],
+        x2 = vertices[j][0],
+        y2 = vertices[j][1],
+        x3 = vertices[k][0],
+        y3 = vertices[k][1],
+        fabsy1y2 = Math.abs(y1 - y2),
+        fabsy2y3 = Math.abs(y2 - y3),
+        xc, yc, m1, m2, mx1, mx2, my1, my2, dx, dy;
+
+    /* Check for coincident points */
+    if(fabsy1y2 < EPSILON && fabsy2y3 < EPSILON)
+      throw new Error("Eek! Coincident points!");
+
+    if(fabsy1y2 < EPSILON) {
+      m2  = -((x3 - x2) / (y3 - y2));
+      mx2 = (x2 + x3) / 2.0;
+      my2 = (y2 + y3) / 2.0;
+      xc  = (x2 + x1) / 2.0;
+      yc  = m2 * (xc - mx2) + my2;
+    }
+
+    else if(fabsy2y3 < EPSILON) {
+      m1  = -((x2 - x1) / (y2 - y1));
+      mx1 = (x1 + x2) / 2.0;
+      my1 = (y1 + y2) / 2.0;
+      xc  = (x3 + x2) / 2.0;
+      yc  = m1 * (xc - mx1) + my1;
+    }
+
+    else {
+      m1  = -((x2 - x1) / (y2 - y1));
+      m2  = -((x3 - x2) / (y3 - y2));
+      mx1 = (x1 + x2) / 2.0;
+      mx2 = (x2 + x3) / 2.0;
+      my1 = (y1 + y2) / 2.0;
+      my2 = (y2 + y3) / 2.0;
+      xc  = (m1 * mx1 - m2 * mx2 + my2 - my1) / (m1 - m2);
+      yc  = (fabsy1y2 > fabsy2y3) ?
+        m1 * (xc - mx1) + my1 :
+        m2 * (xc - mx2) + my2;
+    }
+
+    dx = x2 - xc;
+    dy = y2 - yc;
+    return {i: i, j: j, k: k, x: xc, y: yc, r: dx * dx + dy * dy};
+  }
+
+  function dedup(edges) {
+    var i, j, a, b, m, n;
+
+    for(j = edges.length; j; ) {
+      b = edges[--j];
+      a = edges[--j];
+
+      for(i = j; i; ) {
+        n = edges[--i];
+        m = edges[--i];
+
+        if((a === m && b === n) || (a === n && b === m)) {
+          edges.splice(j, 2);
+          edges.splice(i, 2);
+          break;
+        }
+      }
+    }
+  }
+
+  Delaunay = {
+    triangulate: function(vertices, key) {
+      var n = vertices.length,
+          i, j, indices, st, open, closed, edges, dx, dy, a, b, c;
+
+      /* Bail if there aren't enough vertices to form any triangles. */
+      if(n < 3)
+        return [];
+
+      /* Slice out the actual vertices from the passed objects. (Duplicate the
+       * array even if we don't, though, since we need to make a supertriangle
+       * later on!) */
+      vertices = vertices.slice(0);
+
+      if(key)
+        for(i = n; i--; )
+          vertices[i] = vertices[i][key];
+
+      /* Make an array of indices into the vertex array, sorted by the
+       * vertices' x-position. */
+      indices = new Array(n);
+
+      for(i = n; i--; )
+        indices[i] = i;
+
+      indices.sort(function(i, j) {
+        return vertices[j][0] - vertices[i][0];
+      });
+
+      /* Next, find the vertices of the supertriangle (which contains all other
+       * triangles), and append them onto the end of a (copy of) the vertex
+       * array. */
+      st = supertriangle(vertices);
+      vertices.push(st[0], st[1], st[2]);
+      
+      /* Initialize the open list (containing the supertriangle and nothing
+       * else) and the closed list (which is empty since we havn't processed
+       * any triangles yet). */
+      open   = [circumcircle(vertices, n + 0, n + 1, n + 2)];
+      closed = [];
+      edges  = [];
+
+      /* Incrementally add each vertex to the mesh. */
+      for(i = indices.length; i--; edges.length = 0) {
+        c = indices[i];
+
+        /* For each open triangle, check to see if the current point is
+         * inside it's circumcircle. If it is, remove the triangle and add
+         * it's edges to an edge list. */
+        for(j = open.length; j--; ) {
+          /* If this point is to the right of this triangle's circumcircle,
+           * then this triangle should never get checked again. Remove it
+           * from the open list, add it to the closed list, and skip. */
+          dx = vertices[c][0] - open[j].x;
+          if(dx > 0.0 && dx * dx > open[j].r) {
+            closed.push(open[j]);
+            open.splice(j, 1);
+            continue;
+          }
+
+          /* If we're outside the circumcircle, skip this triangle. */
+          dy = vertices[c][1] - open[j].y;
+          if(dx * dx + dy * dy - open[j].r > EPSILON)
+            continue;
+
+          /* Remove the triangle and add it's edges to the edge list. */
+          edges.push(
+            open[j].i, open[j].j,
+            open[j].j, open[j].k,
+            open[j].k, open[j].i
+          );
+          open.splice(j, 1);
+        }
+
+        /* Remove any doubled edges. */
+        dedup(edges);
+
+        /* Add a new triangle for each edge. */
+        for(j = edges.length; j; ) {
+          b = edges[--j];
+          a = edges[--j];
+          open.push(circumcircle(vertices, a, b, c));
+        }
+      }
+
+      /* Copy any remaining open triangles to the closed list, and then
+       * remove any triangles that share a vertex with the supertriangle,
+       * building a list of triplets that represent triangles. */
+      for(i = open.length; i--; )
+        closed.push(open[i]);
+      open.length = 0;
+
+      for(i = closed.length; i--; )
+        if(closed[i].i < n && closed[i].j < n && closed[i].k < n)
+          open.push(closed[i].i, closed[i].j, closed[i].k);
+
+      /* Yay, we're done! */
+      return open;
+    },
+    contains: function(tri, p) {
+      /* Bounding box test first, for quick rejections. */
+      if((p[0] < tri[0][0] && p[0] < tri[1][0] && p[0] < tri[2][0]) ||
+         (p[0] > tri[0][0] && p[0] > tri[1][0] && p[0] > tri[2][0]) ||
+         (p[1] < tri[0][1] && p[1] < tri[1][1] && p[1] < tri[2][1]) ||
+         (p[1] > tri[0][1] && p[1] > tri[1][1] && p[1] > tri[2][1]))
+        return null;
+
+      var a = tri[1][0] - tri[0][0],
+          b = tri[2][0] - tri[0][0],
+          c = tri[1][1] - tri[0][1],
+          d = tri[2][1] - tri[0][1],
+          i = a * d - b * c;
+
+      /* Degenerate tri. */
+      if(i === 0.0)
+        return null;
+
+      var u = (d * (p[0] - tri[0][0]) - b * (p[1] - tri[0][1])) / i,
+          v = (a * (p[1] - tri[0][1]) - c * (p[0] - tri[0][0])) / i;
+
+      /* If we're outside the tri, fail. */
+      if(u < 0.0 || v < 0.0 || (u + v) > 1.0)
+        return null;
+
+      return [u, v];
+    }
+  };
+
+  if(true)
+    module.exports = Delaunay;
+})();
+
+
+/***/ }),
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -17939,10 +18638,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24), __webpack_require__(25)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26), __webpack_require__(27)(module)))
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports) {
 
 var g;
@@ -17969,7 +18668,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -17997,13 +18696,13 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(27);
+var content = __webpack_require__(29);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -18028,7 +18727,7 @@ if(false) {
 }
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)(undefined);
@@ -18036,13 +18735,13 @@ exports = module.exports = __webpack_require__(0)(undefined);
 
 
 // module
-exports.push([module.i, "body {\n  overflow: hidden;\n  padding: 0;\n  margin: 0;\n  background-color: #2c3e50;\n  font-family: 'Roboto', sans-serif;\n}\n.centered-absolute {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n#direction-ripple {\n  position: absolute;\n  z-index: 2;\n  width: 10px;\n  height: 10px;\n  opacity: 0;\n  transition: all 1s ease-out;\n  transform: translate(-50%, -50%);\n  border-radius: 50%;\n  background-color: #ebebeb;\n}\n#direction-ripple.active {\n  width: 3500px;\n  height: 3500px;\n  opacity: 1;\n}\n#container {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  width: 100%;\n  height: 100%;\n  transition: all 0.1s ease-in-out;\n  opacity: 0;\n  top: calc(50% + 30px);\n}\n#container.active {\n  top: 50%;\n  opacity: 1;\n}\n#container #header-container {\n  position: absolute;\n  padding: 0 40px;\n  left: 0;\n  top: 0;\n  width: calc(100% - 80px);\n  height: 80px;\n  overflow: hidden;\n}\n#container #header-container #header {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n  position: relative;\n  width: 100%;\n  height: 80px;\n  transform: translateY(90px);\n}\n#container #header-container #header.active {\n  transition: all 0.8s ease-out;\n  transform: translateY(0);\n}\n#container #header-container #header #hamburger-menu {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n}\n#container #header-container #header #hamburger-menu #menu-toggle {\n  cursor: pointer;\n  width: 20px;\n  height: 20px;\n}\n#container #header-container #header #hamburger-menu #company-name {\n  margin-left: 20px;\n  color: #ebebeb;\n  font-weight: bold;\n}\n#container #header-container #header #switch-language {\n  overflow: hidden;\n  display: flex;\n  flex-direction: row;\n  color: #ebebeb;\n}\n#container #header-container #header #switch-language .language {\n  cursor: pointer;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n  padding: 5px 12px;\n}\n#container #header-container #header #switch-language .language.ru .name {\n  margin-right: 3px;\n}\n#container #header-container #header #switch-language .language.ru + span {\n  font-size: 22px;\n}\n#container #header-container #header #switch-language .language.en .name {\n  margin-left: 3px;\n}\n#container #header-container #header #switch-language .language .name {\n  font-size: 13px;\n  margin-left: 5px;\n}\n#container #border-animation-svg {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  width: 350px;\n  height: 90px;\n}\n#container #border-animation-svg.active {\n  transition: all 0.7s ease-out;\n  top: 45%;\n}\n#container #border-animation-svg line.top {\n  transform: translate(-380px, 0);\n}\n#container #border-animation-svg line.left {\n  transform: translate(0, -120px);\n}\n#container #border-animation-svg line.bottom {\n  transform: translate(380px, 0);\n}\n#container #border-animation-svg line.right {\n  transform: translate(0, 120px);\n}\n#container #border-animation-svg line.top.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line.left.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line.bottom.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line.right.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line {\n  stroke: #ebebeb;\n  stroke-width: 3px;\n  opacity: 0;\n  transition: all 0.7s ease-in-out;\n}\n#container #border-animation-svg line.active {\n  opacity: 1;\n}\n#container #name-container {\n  overflow: hidden;\n  width: auto;\n  height: 38px;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  display: none;\n}\n#container #name-container.active {\n  transition: all 0.7s ease-out;\n  display: block;\n  top: 45%;\n}\n#container #name-container #name {\n  transition: all 0.5s ease-in-out;\n  transform: translateY(50px);\n  color: #ebebeb;\n  font-size: 33px;\n}\n#container #name-container #name.active {\n  transform: translateY(-2px);\n}\n#container #name-container #name img {\n  position: relative;\n  transform: translateY(5px);\n  width: 29px;\n  height: 29px;\n}\n#container #directions-container {\n  position: absolute;\n  bottom: 5px;\n  left: 50%;\n  transform: translateX(-50%);\n  height: 100px;\n  overflow: hidden;\n}\n#container #directions-container #directions {\n  position: relative;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n  transform: translateY(120px);\n}\n#container #directions-container #directions.active {\n  transition: all 0.8s ease-in-out;\n  transform: translateY(0);\n}\n#container #directions-container #directions .direction {\n  cursor: pointer;\n  margin: 10px 20px 0 20px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  min-width: 100px;\n  text-align: center;\n  font-size: 15px;\n  color: #ebebeb;\n}\n#container #directions-container #directions .direction:hover img {\n  transform: scale(1.2);\n}\n#container #directions-container #directions .direction img {\n  width: 36px;\n  height: 36px;\n  transition: all 0.2s ease-out;\n}\n#container #directions-container #directions .direction .name {\n  margin-top: 8px;\n}\n#container #particles {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background: transparent;\n  z-index: 0;\n}\n.page {\n  position: absolute;\n  z-index: 3;\n  top: 0;\n  left: 0;\n  padding: 60px;\n  width: calc(100% - 120px);\n  height: auto;\n  opacity: 0;\n  display: none;\n  transform: translateY(50px);\n  transition: all 0.4s ease-out;\n}\n.page.visible {\n  display: block;\n}\n.page.active {\n  z-index: 4;\n  opacity: 1;\n  transform: translateY(0);\n}\n.page .head {\n  width: 100%;\n  padding: 5px 0;\n}\n.page .head .title {\n  float: left;\n  font-size: 30px;\n  font-weight: bold;\n  color: #2c3e50;\n}\n.page .head .close-direction {\n  cursor: pointer;\n  float: right;\n  font-size: 30px;\n  font-weight: bold;\n  color: #2c3e50;\n  transform: rotate(45deg);\n  transition: all 0.2s ease-out;\n}\n.page .head .close-direction:hover {\n  transform: rotate(-45deg);\n}\n#stars {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n}\n", ""]);
+exports.push([module.i, "body {\n  overflow: hidden;\n  padding: 0;\n  margin: 0;\n  background-color: #2c3e50;\n  font-family: 'Roboto', sans-serif;\n}\n.centered-absolute {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n#container {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  width: 100%;\n  height: 100%;\n  transition: all 0.1s ease-in-out;\n  opacity: 0;\n  top: calc(50% + 30px);\n}\n#container.active {\n  top: 50%;\n  opacity: 1;\n}\n#container #header-container {\n  position: absolute;\n  padding: 0 40px;\n  left: 0;\n  top: 0;\n  width: calc(100% - 80px);\n  height: 80px;\n  overflow: hidden;\n}\n#container #header-container #header {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: space-between;\n  position: relative;\n  width: 100%;\n  height: 80px;\n  transform: translateY(90px);\n}\n#container #header-container #header.active {\n  transition: all 0.8s ease-out;\n  transform: translateY(0);\n}\n#container #header-container #header #hamburger-menu {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n}\n#container #header-container #header #hamburger-menu #menu-toggle {\n  cursor: pointer;\n  width: 20px;\n  height: 20px;\n  opacity: 0;\n  transform: translateX(-20px);\n}\n#container #header-container #header #hamburger-menu #menu-toggle.active {\n  opacity: 1;\n  transform: translateX(0);\n}\n#container #header-container #header #hamburger-menu #menu-toggle:not(.active) + #company-name {\n  margin-left: 0;\n}\n#container #header-container #header #hamburger-menu #menu-toggle:not(.active) + #company-name + #company-links {\n  opacity: 1;\n  transform: translateX(0);\n}\n#container #header-container #header #hamburger-menu #company-name {\n  margin-left: 20px;\n  color: #ebebeb;\n  font-weight: bold;\n  transition: all 0.2s ease-out;\n}\n#container #header-container #header #right-links-wrapper {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n}\n#container #header-container #header #right-links-wrapper #company-links {\n  margin: 0 20px 0 0;\n  list-style: none;\n}\n#container #header-container #header #right-links-wrapper #company-links li {\n  display: inline-block;\n}\n#container #header-container #header #right-links-wrapper #company-links li:not(:first-child) {\n  margin-left: 12px;\n}\n#container #header-container #header #right-links-wrapper #company-links li a {\n  text-decoration: none;\n  color: #ebebeb;\n  transition: all 0.2s ease-out;\n}\n#container #header-container #header #right-links-wrapper #company-links li a:hover {\n  color: #fff;\n}\n#container #header-container #header #right-links-wrapper #contact-us {\n  cursor: pointer;\n  margin-right: 20px;\n  padding: 9px 13px;\n  border: none;\n  border-radius: 2px;\n  background-color: #ebebeb;\n  text-transform: uppercase;\n  font-size: 14px;\n  font-weight: bold;\n  color: #2c3e50;\n  transition: all 0.2s ease-out;\n}\n#container #header-container #header #right-links-wrapper #contact-us:hover {\n  background-color: #fff;\n  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);\n}\n#container #header-container #header #right-links-wrapper #switch-language {\n  overflow: hidden;\n  display: flex;\n  flex-direction: row;\n  color: #ebebeb;\n}\n#container #header-container #header #right-links-wrapper #switch-language .language {\n  cursor: pointer;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n  padding: 5px 12px;\n}\n#container #header-container #header #right-links-wrapper #switch-language .language.ru .name {\n  margin-right: 3px;\n}\n#container #header-container #header #right-links-wrapper #switch-language .language.ru + span {\n  font-size: 22px;\n}\n#container #header-container #header #right-links-wrapper #switch-language .language.en .name {\n  margin-left: 3px;\n}\n#container #header-container #header #right-links-wrapper #switch-language .language .name {\n  font-size: 13px;\n  margin-left: 5px;\n}\n#container #border-animation-svg {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  width: 350px;\n  height: 90px;\n}\n#container #border-animation-svg.active {\n  transition: all 0.7s ease-out;\n  top: 45%;\n}\n#container #border-animation-svg line.top {\n  transform: translate(-380px, 0);\n}\n#container #border-animation-svg line.left {\n  transform: translate(0, -120px);\n}\n#container #border-animation-svg line.bottom {\n  transform: translate(380px, 0);\n}\n#container #border-animation-svg line.right {\n  transform: translate(0, 120px);\n}\n#container #border-animation-svg line.top.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line.left.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line.bottom.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line.right.active {\n  transform: translate(0, 0);\n}\n#container #border-animation-svg line {\n  stroke: #ebebeb;\n  stroke-width: 3px;\n  opacity: 0;\n  transition: all 0.7s ease-in-out;\n}\n#container #border-animation-svg line.active {\n  opacity: 1;\n}\n#container #name-container {\n  overflow: hidden;\n  width: auto;\n  height: 38px;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  display: none;\n}\n#container #name-container.active {\n  transition: all 0.7s ease-out;\n  display: block;\n  top: 45%;\n}\n#container #name-container #name {\n  transition: all 0.5s ease-in-out;\n  transform: translateY(50px);\n  color: #ebebeb;\n  font-size: 33px;\n}\n#container #name-container #name.active {\n  transform: translateY(-2px);\n}\n#container #name-container #name img {\n  position: relative;\n  transform: translateY(5px);\n  width: 29px;\n  height: 29px;\n}\n#container #directions-container {\n  position: absolute;\n  bottom: 5px;\n  left: 50%;\n  transform: translateX(-50%);\n  height: 100px;\n  overflow: hidden;\n}\n#container #directions-container #directions {\n  position: relative;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: center;\n  transform: translateY(120px);\n}\n#container #directions-container #directions.active {\n  transition: all 0.8s ease-in-out;\n  transform: translateY(0);\n}\n#container #directions-container #directions .direction {\n  cursor: pointer;\n  margin: 10px 20px 0 20px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  min-width: 100px;\n  text-align: center;\n  font-size: 15px;\n  color: #ebebeb;\n}\n#container #directions-container #directions .direction:hover img {\n  transform: scale(1.2);\n}\n#container #directions-container #directions .direction img {\n  width: 36px;\n  height: 36px;\n  transition: all 0.2s ease-out;\n}\n#container #directions-container #directions .direction .name {\n  margin-top: 8px;\n}\n#container #particles {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background: transparent;\n  z-index: 0;\n}\n.page {\n  position: absolute;\n  z-index: 3;\n  top: 0;\n  left: 0;\n  padding: 60px;\n  width: calc(100% - 120px);\n  height: 100px;\n  opacity: 0;\n  background-color: #ebebeb;\n  display: none;\n  transform: translateY(50px);\n  transition: all 0.4s ease-out;\n}\n.page.visible {\n  display: block;\n}\n.page.active {\n  z-index: 4;\n  opacity: 1;\n  transform: translateY(0);\n}\n.page .head {\n  width: 100%;\n  padding: 5px 0;\n}\n.page .head .title {\n  float: left;\n  font-size: 30px;\n  font-weight: bold;\n  color: #2c3e50;\n}\n.page .head .close-direction {\n  cursor: pointer;\n  float: right;\n  font-size: 30px;\n  font-weight: bold;\n  color: #2c3e50;\n  transform: rotate(45deg);\n  transition: all 0.2s ease-out;\n}\n.page .head .close-direction:hover {\n  transform: rotate(-45deg);\n}\n.page .subheader {\n  position: relative;\n  width: 100%;\n  padding: 20px 0;\n  margin-top: 25px;\n}\n.page .subheader h3,\n.page .subheader h4 {\n  float: left;\n  margin: 5px 0 0 0;\n  color: #2c3e50;\n}\n#stars {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -18055,824 +18754,6 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/*!
  */
 var Particles=function(t,e){"use strict";var o,i={};return o=function(){function t(){var t=this;t.defaults={responsive:null,selector:null,maxParticles:100,sizeVariations:3,speed:.5,color:"#000000",minDistance:120,connectParticles:!1},t.element=null,t.context=null,t.ratio=null,t.breakpoints=[],t.activeBreakpoint=null,t.breakpointSettings=[],t.originalSettings=null,t.storage=[]}return t}(),o.prototype.init=function(t){var e=this;e.options=e._extend(e.defaults,t),e.options.color=t.color?e._hex2rgb(t.color):e._hex2rgb(e.defaults.color),e.originalSettings=JSON.parse(JSON.stringify(e.options)),e._initializeCanvas(),e._initializeEvents(),e._registerBreakpoints(),e._checkResponsive(),e._initializeStorage(),e._animate()},o.prototype._initializeCanvas=function(){var o,i,n=this;return n.options.selector?(n.element=e.querySelector(n.options.selector),n.context=n.element.getContext("2d"),o=t.devicePixelRatio||1,i=n.context.webkitBackingStorePixelRatio||n.context.mozBackingStorePixelRatio||n.context.msBackingStorePixelRatio||n.context.oBackingStorePixelRatio||n.context.backingStorePixelRatio||1,n.ratio=o/i,n.element.width=t.innerWidth*n.ratio,n.element.height=t.innerHeight*n.ratio,n.element.style.width="100%",n.element.style.height="100%",void n.context.scale(n.ratio,n.ratio)):(console.warn("particles.js: No selector specified! Check https://github.com/marcbruederlin/particles.js#options"),!1)},o.prototype._initializeEvents=function(){var e=this;t.addEventListener("resize",e._resize.bind(e),!1)},o.prototype._initializeStorage=function(){var t=this;t.storage=[];for(var e=t.options.maxParticles;e--;)t.storage.push(new i(t.context,t.options))},o.prototype._registerBreakpoints=function(){var t,e,o,i=this,n=i.options.responsive||null;if("object"==typeof n&&null!==n&&n.length){for(t in n)if(o=i.breakpoints.length-1,e=n[t].breakpoint,n.hasOwnProperty(t)){for(n[t].options.color&&(n[t].options.color=i._hex2rgb(n[t].options.color));o>=0;)i.breakpoints[o]&&i.breakpoints[o]===e&&i.breakpoints.splice(o,1),o--;i.breakpoints.push(e),i.breakpointSettings[e]=n[t].options}i.breakpoints.sort(function(t,e){return e-t})}},o.prototype._checkResponsive=function(){var e,o=this,i=!1,n=t.innerWidth;if(o.options.responsive&&o.options.responsive.length&&null!==o.options.responsive){i=null;for(e in o.breakpoints)o.breakpoints.hasOwnProperty(e)&&n<=o.breakpoints[e]&&(i=o.breakpoints[e]);null!==i?(o.activeBreakpoint=i,o.options=o._extend(o.options,o.breakpointSettings[i])):null!==o.activeBreakpoint&&(o.activeBreakpoint=null,i=null,o.options=o._extend(o.options,o.originalSettings))}},o.prototype._refresh=function(){var t=this;t._initializeStorage(),t._update()},o.prototype._resize=function(){var e=this;e.element.width=t.innerWidth*e.ratio,e.element.height=t.innerHeight*e.ratio,e.context.scale(e.ratio,e.ratio),clearTimeout(e.windowDelay),e.windowDelay=t.setTimeout(function(){e._checkResponsive(),e._refresh()},50)},o.prototype._animate=function(){var e=this;e._draw(),t.requestAnimFrame(e._animate.bind(e))},o.prototype._draw=function(){var t=this;t.context.clearRect(0,0,t.element.width,t.element.height);for(var e=t.storage.length;e--;){var o=t.storage[e];o._draw()}t._update()},o.prototype._update=function(){for(var e=this,o=e.storage.length;o--;){var i=e.storage[o];if(i.x+=i.vx,i.y+=i.vy,i.x+i.radius>t.innerWidth?i.x=i.radius:i.x-i.radius<0&&(i.x=t.innerWidth-i.radius),i.y+i.radius>t.innerHeight?i.y=i.radius:i.y-i.radius<0&&(i.y=t.innerHeight-i.radius),e.options.connectParticles)for(var n=o+1;n<e.storage.length;n++){var r=e.storage[n];e._calculateDistance(i,r)}}},o.prototype._calculateDistance=function(t,e){var o,i=this,n=t.x-e.x,r=t.y-e.y;o=Math.sqrt(n*n+r*r),o<=i.options.minDistance&&(i.context.beginPath(),i.context.strokeStyle="rgba("+i.options.color.r+", "+i.options.color.g+", "+i.options.color.b+", "+(1.2-o/i.options.minDistance)+")",i.context.moveTo(t.x,t.y),i.context.lineTo(e.x,e.y),i.context.stroke(),i.context.closePath())},o.prototype._extend=function(t,e){return Object.keys(e).forEach(function(o){t[o]=e[o]}),t},o.prototype._hex2rgb=function(t){var e=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(t);return e?{r:parseInt(e[1],16),g:parseInt(e[2],16),b:parseInt(e[3],16)}:null},i=function(e,o){var i=this;i.context=e,i.options=o,i.x=Math.random()*t.innerWidth,i.y=Math.random()*t.innerHeight,i.vx=Math.random()*i.options.speed*2-i.options.speed,i.vy=Math.random()*i.options.speed*2-i.options.speed,i.radius=Math.random()*Math.random()*i.options.sizeVariations,i._draw()},i.prototype._draw=function(){var t=this;t.context.fillStyle="rgb("+t.options.color.r+", "+t.options.color.g+", "+t.options.color.b+")",t.context.beginPath(),t.context.arc(t.x,t.y,t.radius,0,2*Math.PI,!1),t.context.fill()},t.requestAnimFrame=function(){return t.requestAnimationFrame||t.webkitRequestAnimationFrame||t.mozRequestAnimationFrame||function(e){t.setTimeout(e,1e3/60)}}(),new o}(window,document);!function(){"use strict"; true?!(__WEBPACK_AMD_DEFINE_RESULT__ = function(){return Particles}.call(exports, __webpack_require__, exports, module),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)):"undefined"!=typeof module&&module.exports?module.exports=Particles:window.Particles=Particles}();
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.initStars = initStars;
-
-var _delaunayFast = __webpack_require__(30);
-
-var Delaunay = _interopRequireWildcard(_delaunayFast);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function initStars() {
-    /**
-     * Stars
-     * Inspired by Steve Courtney's poster art for Celsius GS's Drifter - http://celsiusgs.com/drifter/posters.php
-     * by Cory Hughart - http://coryhughart.com
-     */
-    // Settings
-    var particleCount = 40,
-        flareCount = 10,
-        motion = 0.05,
-        tilt = 0.05,
-        color = '#FFEED4',
-        particleSizeBase = 1,
-        particleSizeMultiplier = 0.5,
-        flareSizeBase = 100,
-        flareSizeMultiplier = 100,
-        lineWidth = 1,
-        linkChance = 75,
-        // chance per frame of link, higher = smaller chance
-    linkLengthMin = 5,
-        // min linked vertices
-    linkLengthMax = 7,
-        // max linked vertices
-    linkOpacity = 0.25,
-        // number between 0 & 1
-    linkFade = 90,
-        // link fade-out frames
-    linkSpeed = 1,
-        // distance a link travels in 1 frame
-    glareAngle = -60,
-        glareOpacityMultiplier = 0.05,
-        renderParticles = true,
-        renderParticleGlare = true,
-        renderFlares = true,
-        renderLinks = true,
-        renderMesh = false,
-        flicker = true,
-        flickerSmoothing = 15,
-        // higher = smoother flicker
-    blurSize = 0,
-        orbitTilt = true,
-        randomMotion = true,
-        noiseLength = 1000,
-        noiseStrength = 1;
-
-    var canvas = document.getElementById('stars'),
-
-    //orbits = document.getElementById('orbits'),
-    context = canvas.getContext('2d'),
-        mouse = { x: 0, y: 0 },
-        m = {},
-        r = 0,
-        c = 1000,
-        // multiplier for delaunay points, since floats too small can mess up the algorithm
-    n = 0,
-        nAngle = Math.PI * 2 / noiseLength,
-        nRad = 100,
-        nScale = 0.5,
-        nPos = { x: 0, y: 0 },
-        points = [],
-        vertices = [],
-        triangles = [],
-        links = [],
-        particles = [],
-        flares = [];
-
-    function init() {
-        var i, j, k;
-
-        // requestAnimFrame polyfill
-        window.requestAnimFrame = function () {
-            return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
-                window.setTimeout(callback, 1000 / 60);
-            };
-        }();
-
-        // Fade in background
-        /*
-        var background = document.getElementById('background'),
-        	bgImg = new Image(),
-        	bgURL = '/img/background.jpg';
-        bgImg.onload = function() {
-        	//console.log('background loaded');
-        	background.style.backgroundImage = 'url("'+bgURL+'")';
-        	background.className += ' loaded';
-        }
-        bgImg.src = bgURL;
-        */
-
-        // Size canvas
-        resize();
-
-        mouse.x = canvas.clientWidth / 2;
-        mouse.y = canvas.clientHeight / 2;
-
-        // Create particle positions
-        for (i = 0; i < particleCount; i++) {
-            var p = new Particle();
-            particles.push(p);
-            points.push([p.x * c, p.y * c]);
-        }
-
-        //console.log(JSON.stringify(points));
-
-        // Delaunay triangulation
-        //var Delaunay = require('delaunay-fast');
-        vertices = Delaunay.triangulate(points);
-        //console.log(JSON.stringify(vertices));
-        // Create an array of "triangles" (groups of 3 indices)
-        var tri = [];
-        for (i = 0; i < vertices.length; i++) {
-            if (tri.length == 3) {
-                triangles.push(tri);
-                tri = [];
-            }
-            tri.push(vertices[i]);
-        }
-        //console.log(JSON.stringify(triangles));
-
-        // Tell all the particles who their neighbors are
-        for (i = 0; i < particles.length; i++) {
-            // Loop through all tirangles
-            for (j = 0; j < triangles.length; j++) {
-                // Check if this particle's index is in this triangle
-                k = triangles[j].indexOf(i);
-                // If it is, add its neighbors to the particles contacts list
-                if (k !== -1) {
-                    triangles[j].forEach(function (value, index, array) {
-                        if (value !== i && particles[i].neighbors.indexOf(value) == -1) {
-                            particles[i].neighbors.push(value);
-                        }
-                    });
-                }
-            }
-        }
-        //console.log(JSON.stringify(particles));
-
-        if (renderFlares) {
-            // Create flare positions
-            for (i = 0; i < flareCount; i++) {
-                flares.push(new Flare());
-            }
-        }
-
-        // Motion mode
-        //if (Modernizr && Modernizr.deviceorientation) {
-        if ('ontouchstart' in document.documentElement && window.DeviceOrientationEvent) {
-            console.log('Using device orientation');
-            window.addEventListener('deviceorientation', function (e) {
-                mouse.x = canvas.clientWidth / 2 - e.gamma / 90 * (canvas.clientWidth / 2) * 2;
-                mouse.y = canvas.clientHeight / 2 - e.beta / 90 * (canvas.clientHeight / 2) * 2;
-                //console.log('Center: x:'+(canvas.clientWidth/2)+' y:'+(canvas.clientHeight/2));
-                //console.log('Orientation: x:'+mouse.x+' ('+e.gamma+') y:'+mouse.y+' ('+e.beta+')');
-            }, true);
-        } else {
-            // Mouse move listener
-            console.log('Using mouse movement');
-            document.body.addEventListener('mousemove', function (e) {
-                //console.log('moved');
-                mouse.x = e.clientX;
-                mouse.y = e.clientY;
-            });
-        }
-
-        // Random motion
-        if (randomMotion) {}
-        //var SimplexNoise = require('simplex-noise');
-        //var simplex = new SimplexNoise();
-
-
-        // Animation loop
-        (function animloop() {
-            requestAnimFrame(animloop);
-            resize();
-            render();
-        })();
-    }
-
-    function render() {
-        if (randomMotion) {
-            n++;
-            if (n >= noiseLength) {
-                n = 0;
-            }
-
-            nPos = noisePoint(n);
-            //console.log('NOISE x:'+nPos.x+' y:'+nPos.y);
-        }
-
-        // Clear
-        context.clearRect(0, 0, canvas.width, canvas.height);
-
-        if (blurSize > 0) {
-            context.shadowBlur = blurSize;
-            context.shadowColor = color;
-        }
-
-        if (renderParticles) {
-            // Render particles
-            for (var i = 0; i < particleCount; i++) {
-                particles[i].render();
-            }
-        }
-
-        if (renderMesh) {
-            // Render all lines
-            context.beginPath();
-            for (var v = 0; v < vertices.length - 1; v++) {
-                // Splits the array into triplets
-                if ((v + 1) % 3 === 0) {
-                    continue;
-                }
-
-                var p1 = particles[vertices[v]],
-                    p2 = particles[vertices[v + 1]];
-
-                //console.log('Line: '+p1.x+','+p1.y+'->'+p2.x+','+p2.y);
-
-                var pos1 = position(p1.x, p1.y, p1.z),
-                    pos2 = position(p2.x, p2.y, p2.z);
-
-                context.moveTo(pos1.x, pos1.y);
-                context.lineTo(pos2.x, pos2.y);
-            }
-            context.strokeStyle = color;
-            context.lineWidth = lineWidth;
-            context.stroke();
-            context.closePath();
-        }
-
-        if (renderLinks) {
-            // Possibly start a new link
-            if (random(0, linkChance) == linkChance) {
-                var length = random(linkLengthMin, linkLengthMax);
-                var start = random(0, particles.length - 1);
-                startLink(start, length);
-            }
-
-            // Render existing links
-            // Iterate in reverse so that removing items doesn't affect the loop
-            for (var l = links.length - 1; l >= 0; l--) {
-                if (links[l] && !links[l].finished) {
-                    links[l].render();
-                } else {
-                    delete links[l];
-                }
-            }
-        }
-
-        if (renderFlares) {
-            // Render flares
-            for (var j = 0; j < flareCount; j++) {
-                flares[j].render();
-            }
-        }
-
-        /*
-        if (orbitTilt) {
-        	var tiltX = -(((canvas.clientWidth / 2) - mouse.x + ((nPos.x - 0.5) * noiseStrength)) * tilt),
-        		tiltY = (((canvas.clientHeight / 2) - mouse.y + ((nPos.y - 0.5) * noiseStrength)) * tilt);
-         		orbits.style.transform = 'rotateY('+tiltX+'deg) rotateX('+tiltY+'deg)';
-        }
-        */
-    }
-
-    function resize() {
-        canvas.width = window.innerWidth * (window.devicePixelRatio || 1);
-        canvas.height = canvas.width * (canvas.clientHeight / canvas.clientWidth);
-    }
-
-    function startLink(vertex, length) {
-        //console.log('LINK from '+vertex+' (length '+length+')');
-        links.push(new Link(vertex, length));
-    }
-
-    // Particle class
-    var Particle = function Particle() {
-        this.x = random(-0.1, 1.1, true);
-        this.y = random(-0.1, 1.1, true);
-        this.z = random(0, 4);
-        this.color = color;
-        this.opacity = random(0.1, 1, true);
-        this.flicker = 0;
-        this.neighbors = []; // placeholder for neighbors
-    };
-    Particle.prototype.render = function () {
-        var pos = position(this.x, this.y, this.z),
-            r = (this.z * particleSizeMultiplier + particleSizeBase) * (sizeRatio() / 1000),
-            o = this.opacity;
-
-        if (flicker) {
-            var newVal = random(-0.5, 0.5, true);
-            this.flicker += (newVal - this.flicker) / flickerSmoothing;
-            if (this.flicker > 0.5) this.flicker = 0.5;
-            if (this.flicker < -0.5) this.flicker = -0.5;
-            o += this.flicker;
-            if (o > 1) o = 1;
-            if (o < 0) o = 0;
-        }
-
-        context.fillStyle = this.color;
-        context.globalAlpha = o;
-        context.beginPath();
-        context.arc(pos.x, pos.y, r, 0, 2 * Math.PI, false);
-        context.fill();
-        context.closePath();
-
-        if (renderParticleGlare) {
-            context.globalAlpha = o * glareOpacityMultiplier;
-            /*
-            context.ellipse(pos.x, pos.y, r * 30, r, 90 * (Math.PI / 180), 0, 2 * Math.PI, false);
-            context.fill();
-            context.closePath();
-            */
-            context.ellipse(pos.x, pos.y, r * 100, r, (glareAngle - (nPos.x - 0.5) * noiseStrength * motion) * (Math.PI / 180), 0, 2 * Math.PI, false);
-            context.fill();
-            context.closePath();
-        }
-
-        context.globalAlpha = 1;
-    };
-
-    // Flare class
-    var Flare = function Flare() {
-        this.x = random(-0.25, 1.25, true);
-        this.y = random(-0.25, 1.25, true);
-        this.z = random(0, 2);
-        this.color = color;
-        this.opacity = random(0.001, 0.01, true);
-    };
-    Flare.prototype.render = function () {
-        var pos = position(this.x, this.y, this.z),
-            r = (this.z * flareSizeMultiplier + flareSizeBase) * (sizeRatio() / 1000);
-
-        // Feathered circles
-        /*
-        var grad = context.createRadialGradient(x+r,y+r,0,x+r,y+r,r);
-        grad.addColorStop(0, 'rgba(255,255,255,'+f.o+')');
-        grad.addColorStop(0.8, 'rgba(255,255,255,'+f.o+')');
-        grad.addColorStop(1, 'rgba(255,255,255,0)');
-        context.fillStyle = grad;
-        context.beginPath();
-        context.fillRect(x, y, r*2, r*2);
-        context.closePath();
-        */
-
-        context.beginPath();
-        context.globalAlpha = this.opacity;
-        context.arc(pos.x, pos.y, r, 0, 2 * Math.PI, false);
-        context.fillStyle = this.color;
-        context.fill();
-        context.closePath();
-        context.globalAlpha = 1;
-    };
-
-    // Link class
-    var Link = function Link(startVertex, numPoints) {
-        this.length = numPoints;
-        this.verts = [startVertex];
-        this.stage = 0;
-        this.linked = [startVertex];
-        this.distances = [];
-        this.traveled = 0;
-        this.fade = 0;
-        this.finished = false;
-    };
-    Link.prototype.render = function () {
-        // Stages:
-        // 0. Vertex collection
-        // 1. Render line reaching from vertex to vertex
-        // 2. Fade out
-        // 3. Finished (delete me)
-
-        var i, p, pos, points;
-
-        switch (this.stage) {
-            // VERTEX COLLECTION STAGE
-            case 0:
-
-                // Grab the last member of the link
-                var last = particles[this.verts[this.verts.length - 1]];
-                //console.log(JSON.stringify(last));
-                if (last && last.neighbors && last.neighbors.length > 0) {
-                    // Grab a random neighbor
-                    var neighbor = last.neighbors[random(0, last.neighbors.length - 1)];
-                    // If we haven't seen that particle before, add it to the link
-                    if (this.verts.indexOf(neighbor) == -1) {
-                        this.verts.push(neighbor);
-                    }
-                    // If we have seen that particle before, we'll just wait for the next frame
-                } else {
-                    //console.log(this.verts[0]+' prematurely moving to stage 3 (0)');
-                    this.stage = 3;
-                    this.finished = true;
-                }
-
-                if (this.verts.length >= this.length) {
-                    // Calculate all distances at once
-                    for (i = 0; i < this.verts.length - 1; i++) {
-                        var p1 = particles[this.verts[i]],
-                            p2 = particles[this.verts[i + 1]],
-                            dx = p1.x - p2.x,
-                            dy = p1.y - p2.y,
-                            dist = Math.sqrt(dx * dx + dy * dy);
-
-                        this.distances.push(dist);
-                    }
-                    //console.log('Distances: '+JSON.stringify(this.distances));
-                    //console.log('verts: '+this.verts.length+' distances: '+this.distances.length);
-
-                    //console.log(this.verts[0]+' moving to stage 1');
-                    this.stage = 1;
-                }
-                break;
-
-            // RENDER LINE ANIMATION STAGE
-            case 1:
-                if (this.distances.length > 0) {
-
-                    points = [];
-                    //var a = 1;
-
-                    // Gather all points already linked
-                    for (i = 0; i < this.linked.length; i++) {
-                        p = particles[this.linked[i]];
-                        pos = position(p.x, p.y, p.z);
-                        points.push([pos.x, pos.y]);
-                    }
-
-                    var linkSpeedRel = linkSpeed * 0.00001 * canvas.width;
-                    this.traveled += linkSpeedRel;
-                    var d = this.distances[this.linked.length - 1];
-                    // Calculate last point based on linkSpeed and distance travelled to next point
-                    if (this.traveled >= d) {
-                        this.traveled = 0;
-                        // We've reached the next point, add coordinates to array
-                        //console.log(this.verts[0]+' reached vertex '+(this.linked.length+1)+' of '+this.verts.length);
-
-                        this.linked.push(this.verts[this.linked.length]);
-                        p = particles[this.linked[this.linked.length - 1]];
-                        pos = position(p.x, p.y, p.z);
-                        points.push([pos.x, pos.y]);
-
-                        if (this.linked.length >= this.verts.length) {
-                            //console.log(this.verts[0]+' moving to stage 2 (1)');
-                            this.stage = 2;
-                        }
-                    } else {
-                        // We're still travelling to the next point, get coordinates at travel distance
-                        // http://math.stackexchange.com/a/85582
-                        var a = particles[this.linked[this.linked.length - 1]],
-                            b = particles[this.verts[this.linked.length]],
-                            t = d - this.traveled,
-                            x = (this.traveled * b.x + t * a.x) / d,
-                            y = (this.traveled * b.y + t * a.y) / d,
-                            z = (this.traveled * b.z + t * a.z) / d;
-
-                        pos = position(x, y, z);
-
-                        //console.log(this.verts[0]+' traveling to vertex '+(this.linked.length+1)+' of '+this.verts.length+' ('+this.traveled+' of '+this.distances[this.linked.length]+')');
-
-                        points.push([pos.x, pos.y]);
-                    }
-
-                    this.drawLine(points);
-                } else {
-                    //console.log(this.verts[0]+' prematurely moving to stage 3 (1)');
-                    this.stage = 3;
-                    this.finished = true;
-                }
-                break;
-
-            // FADE OUT STAGE
-            case 2:
-                if (this.verts.length > 1) {
-                    if (this.fade < linkFade) {
-                        this.fade++;
-
-                        // Render full link between all vertices and fade over time
-                        points = [];
-                        var alpha = (1 - this.fade / linkFade) * linkOpacity;
-                        for (i = 0; i < this.verts.length; i++) {
-                            p = particles[this.verts[i]];
-                            pos = position(p.x, p.y, p.z);
-                            points.push([pos.x, pos.y]);
-                        }
-                        this.drawLine(points, alpha);
-                    } else {
-                        //console.log(this.verts[0]+' moving to stage 3 (2a)');
-                        this.stage = 3;
-                        this.finished = true;
-                    }
-                } else {
-                    //console.log(this.verts[0]+' prematurely moving to stage 3 (2b)');
-                    this.stage = 3;
-                    this.finished = true;
-                }
-                break;
-
-            // FINISHED STAGE
-            case 3:
-            default:
-                this.finished = true;
-                break;
-        }
-    };
-    Link.prototype.drawLine = function (points, alpha) {
-        if (typeof alpha !== 'number') alpha = linkOpacity;
-
-        if (points.length > 1 && alpha > 0) {
-            //console.log(this.verts[0]+': Drawing line '+alpha);
-            context.globalAlpha = alpha;
-            context.beginPath();
-            for (var i = 0; i < points.length - 1; i++) {
-                context.moveTo(points[i][0], points[i][1]);
-                context.lineTo(points[i + 1][0], points[i + 1][1]);
-            }
-            context.strokeStyle = color;
-            context.lineWidth = lineWidth;
-            context.stroke();
-            context.closePath();
-            context.globalAlpha = 1;
-        }
-    };
-
-    // Utils
-
-    function noisePoint(i) {
-        var a = nAngle * i,
-            cosA = Math.cos(a),
-            sinA = Math.sin(a),
-
-        //value = simplex.noise2D(nScale * cosA + nScale, nScale * sinA + nScale),
-        //rad = nRad + value;
-        rad = nRad;
-        return {
-            x: rad * cosA,
-            y: rad * sinA
-        };
-    }
-
-    function position(x, y, z) {
-        return {
-            x: x * canvas.width + (canvas.width / 2 - mouse.x + (nPos.x - 0.5) * noiseStrength) * z * motion,
-            y: y * canvas.height + (canvas.height / 2 - mouse.y + (nPos.y - 0.5) * noiseStrength) * z * motion
-        };
-    }
-
-    function sizeRatio() {
-        return canvas.width >= canvas.height ? canvas.width : canvas.height;
-    }
-
-    function random(min, max, float) {
-        return float ? Math.random() * (max - min) + min : Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    // init
-    if (canvas) init();
-}
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Delaunay;
-
-(function() {
-  "use strict";
-
-  var EPSILON = 1.0 / 1048576.0;
-
-  function supertriangle(vertices) {
-    var xmin = Number.POSITIVE_INFINITY,
-        ymin = Number.POSITIVE_INFINITY,
-        xmax = Number.NEGATIVE_INFINITY,
-        ymax = Number.NEGATIVE_INFINITY,
-        i, dx, dy, dmax, xmid, ymid;
-
-    for(i = vertices.length; i--; ) {
-      if(vertices[i][0] < xmin) xmin = vertices[i][0];
-      if(vertices[i][0] > xmax) xmax = vertices[i][0];
-      if(vertices[i][1] < ymin) ymin = vertices[i][1];
-      if(vertices[i][1] > ymax) ymax = vertices[i][1];
-    }
-
-    dx = xmax - xmin;
-    dy = ymax - ymin;
-    dmax = Math.max(dx, dy);
-    xmid = xmin + dx * 0.5;
-    ymid = ymin + dy * 0.5;
-
-    return [
-      [xmid - 20 * dmax, ymid -      dmax],
-      [xmid            , ymid + 20 * dmax],
-      [xmid + 20 * dmax, ymid -      dmax]
-    ];
-  }
-
-  function circumcircle(vertices, i, j, k) {
-    var x1 = vertices[i][0],
-        y1 = vertices[i][1],
-        x2 = vertices[j][0],
-        y2 = vertices[j][1],
-        x3 = vertices[k][0],
-        y3 = vertices[k][1],
-        fabsy1y2 = Math.abs(y1 - y2),
-        fabsy2y3 = Math.abs(y2 - y3),
-        xc, yc, m1, m2, mx1, mx2, my1, my2, dx, dy;
-
-    /* Check for coincident points */
-    if(fabsy1y2 < EPSILON && fabsy2y3 < EPSILON)
-      throw new Error("Eek! Coincident points!");
-
-    if(fabsy1y2 < EPSILON) {
-      m2  = -((x3 - x2) / (y3 - y2));
-      mx2 = (x2 + x3) / 2.0;
-      my2 = (y2 + y3) / 2.0;
-      xc  = (x2 + x1) / 2.0;
-      yc  = m2 * (xc - mx2) + my2;
-    }
-
-    else if(fabsy2y3 < EPSILON) {
-      m1  = -((x2 - x1) / (y2 - y1));
-      mx1 = (x1 + x2) / 2.0;
-      my1 = (y1 + y2) / 2.0;
-      xc  = (x3 + x2) / 2.0;
-      yc  = m1 * (xc - mx1) + my1;
-    }
-
-    else {
-      m1  = -((x2 - x1) / (y2 - y1));
-      m2  = -((x3 - x2) / (y3 - y2));
-      mx1 = (x1 + x2) / 2.0;
-      mx2 = (x2 + x3) / 2.0;
-      my1 = (y1 + y2) / 2.0;
-      my2 = (y2 + y3) / 2.0;
-      xc  = (m1 * mx1 - m2 * mx2 + my2 - my1) / (m1 - m2);
-      yc  = (fabsy1y2 > fabsy2y3) ?
-        m1 * (xc - mx1) + my1 :
-        m2 * (xc - mx2) + my2;
-    }
-
-    dx = x2 - xc;
-    dy = y2 - yc;
-    return {i: i, j: j, k: k, x: xc, y: yc, r: dx * dx + dy * dy};
-  }
-
-  function dedup(edges) {
-    var i, j, a, b, m, n;
-
-    for(j = edges.length; j; ) {
-      b = edges[--j];
-      a = edges[--j];
-
-      for(i = j; i; ) {
-        n = edges[--i];
-        m = edges[--i];
-
-        if((a === m && b === n) || (a === n && b === m)) {
-          edges.splice(j, 2);
-          edges.splice(i, 2);
-          break;
-        }
-      }
-    }
-  }
-
-  Delaunay = {
-    triangulate: function(vertices, key) {
-      var n = vertices.length,
-          i, j, indices, st, open, closed, edges, dx, dy, a, b, c;
-
-      /* Bail if there aren't enough vertices to form any triangles. */
-      if(n < 3)
-        return [];
-
-      /* Slice out the actual vertices from the passed objects. (Duplicate the
-       * array even if we don't, though, since we need to make a supertriangle
-       * later on!) */
-      vertices = vertices.slice(0);
-
-      if(key)
-        for(i = n; i--; )
-          vertices[i] = vertices[i][key];
-
-      /* Make an array of indices into the vertex array, sorted by the
-       * vertices' x-position. */
-      indices = new Array(n);
-
-      for(i = n; i--; )
-        indices[i] = i;
-
-      indices.sort(function(i, j) {
-        return vertices[j][0] - vertices[i][0];
-      });
-
-      /* Next, find the vertices of the supertriangle (which contains all other
-       * triangles), and append them onto the end of a (copy of) the vertex
-       * array. */
-      st = supertriangle(vertices);
-      vertices.push(st[0], st[1], st[2]);
-      
-      /* Initialize the open list (containing the supertriangle and nothing
-       * else) and the closed list (which is empty since we havn't processed
-       * any triangles yet). */
-      open   = [circumcircle(vertices, n + 0, n + 1, n + 2)];
-      closed = [];
-      edges  = [];
-
-      /* Incrementally add each vertex to the mesh. */
-      for(i = indices.length; i--; edges.length = 0) {
-        c = indices[i];
-
-        /* For each open triangle, check to see if the current point is
-         * inside it's circumcircle. If it is, remove the triangle and add
-         * it's edges to an edge list. */
-        for(j = open.length; j--; ) {
-          /* If this point is to the right of this triangle's circumcircle,
-           * then this triangle should never get checked again. Remove it
-           * from the open list, add it to the closed list, and skip. */
-          dx = vertices[c][0] - open[j].x;
-          if(dx > 0.0 && dx * dx > open[j].r) {
-            closed.push(open[j]);
-            open.splice(j, 1);
-            continue;
-          }
-
-          /* If we're outside the circumcircle, skip this triangle. */
-          dy = vertices[c][1] - open[j].y;
-          if(dx * dx + dy * dy - open[j].r > EPSILON)
-            continue;
-
-          /* Remove the triangle and add it's edges to the edge list. */
-          edges.push(
-            open[j].i, open[j].j,
-            open[j].j, open[j].k,
-            open[j].k, open[j].i
-          );
-          open.splice(j, 1);
-        }
-
-        /* Remove any doubled edges. */
-        dedup(edges);
-
-        /* Add a new triangle for each edge. */
-        for(j = edges.length; j; ) {
-          b = edges[--j];
-          a = edges[--j];
-          open.push(circumcircle(vertices, a, b, c));
-        }
-      }
-
-      /* Copy any remaining open triangles to the closed list, and then
-       * remove any triangles that share a vertex with the supertriangle,
-       * building a list of triplets that represent triangles. */
-      for(i = open.length; i--; )
-        closed.push(open[i]);
-      open.length = 0;
-
-      for(i = closed.length; i--; )
-        if(closed[i].i < n && closed[i].j < n && closed[i].k < n)
-          open.push(closed[i].i, closed[i].j, closed[i].k);
-
-      /* Yay, we're done! */
-      return open;
-    },
-    contains: function(tri, p) {
-      /* Bounding box test first, for quick rejections. */
-      if((p[0] < tri[0][0] && p[0] < tri[1][0] && p[0] < tri[2][0]) ||
-         (p[0] > tri[0][0] && p[0] > tri[1][0] && p[0] > tri[2][0]) ||
-         (p[1] < tri[0][1] && p[1] < tri[1][1] && p[1] < tri[2][1]) ||
-         (p[1] > tri[0][1] && p[1] > tri[1][1] && p[1] > tri[2][1]))
-        return null;
-
-      var a = tri[1][0] - tri[0][0],
-          b = tri[2][0] - tri[0][0],
-          c = tri[1][1] - tri[0][1],
-          d = tri[2][1] - tri[0][1],
-          i = a * d - b * c;
-
-      /* Degenerate tri. */
-      if(i === 0.0)
-        return null;
-
-      var u = (d * (p[0] - tri[0][0]) - b * (p[1] - tri[0][1])) / i,
-          v = (a * (p[1] - tri[0][1]) - c * (p[0] - tri[0][0])) / i;
-
-      /* If we're outside the tri, fail. */
-      if(u < 0.0 || v < 0.0 || (u + v) > 1.0)
-        return null;
-
-      return [u, v];
-    }
-  };
-
-  if(true)
-    module.exports = Delaunay;
-})();
-
 
 /***/ })
 /******/ ]);
