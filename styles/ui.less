@@ -1,0 +1,26 @@
+@import 'colors';
+
+button, .btn {
+    cursor: pointer;
+    min-width: 120px;
+    padding: 10px 12px;
+    border-radius: 2px;
+    border: none;
+    outline: none;
+    background-color: @c-button-light;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-weight: bold;
+    color: @c-button-text-dark;
+
+    &:hover {
+        outline: none;
+    }
+
+    &.large {
+        width: 220px;
+        padding: 12px 14px;
+        font-size: 17px;
+    }
+}
+
