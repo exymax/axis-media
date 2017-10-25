@@ -1,5 +1,9 @@
 @import 'colors';
 
+a {
+    text-decoration: none;
+}
+
 button, .btn {
     cursor: pointer;
     min-width: 120px;
@@ -19,8 +23,12 @@ button, .btn {
 
     &.large {
         width: 220px;
-        padding: 12px 14px;
-        font-size: 17px;
+        padding: 16px 12px;
+        font-size: 15px;
+    }
+
+    &.shadow {
+        box-shadow: 0 8px 30px -6px rgba(0, 0, 0, 0.6);
     }
 }
 
