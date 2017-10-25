@@ -21,10 +21,10 @@ html, body {
 
     #header {
         position: fixed;
+        z-index: 5;
         display: flex;
         flex-direction: row;
         align-items: center;
-        z-index: 2;
         width: calc(~"100% - 15%");
         padding: 20px 7.5%;
         color: @c-text-light;
@@ -47,8 +47,8 @@ html, body {
             text-align: left;
 
             img {
-                width: 40px;
-                height: 40px;
+                width: 35px;
+                height: 35px;
             }
 
             span {
@@ -96,11 +96,21 @@ html, body {
 
     #hero {
         position: relative;
+        z-index: 4;
         width: 100%;
         height: 750px;
         overflow: hidden;
 
+        #hero-fader {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, .2);
+        }
+
         .content {
+            position: absolute;
+            z-index: 2;
             width: 500px;
 
             #hero-text {
@@ -131,7 +141,7 @@ html, body {
             }
 
             #purchase {
-                margin-top: 25px;
+                margin-top: 40px;
             }
         }
     }
@@ -140,9 +150,21 @@ html, body {
         color: @c-text-black;
     }
 
-    #about {
+    #about-white-rect {
         position: relative;
+        z-index: 5;
         width: 100%;
-        height: 800px;
+        height: 300px;
+
+        #about {
+            position: absolute;
+            width: 80%;
+            height: 300px;
+            transform: translateY(-50%);
+            left: 10%;
+            border-radius: 10px;
+            background-color: @c-block-blue;
+            box-shadow: 0px 30px 60px -30px rgba(0, 0, 0, 0.45);
+        }
     }
 }
