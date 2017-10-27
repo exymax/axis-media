@@ -19,6 +19,7 @@ button, .btn {
 
     &:hover {
         outline: none;
+        background-color: @c-button-light-full;
     }
 
     &.large {
@@ -29,6 +30,10 @@ button, .btn {
 
     &.shadow {
         box-shadow: 0 8px 30px -6px rgba(0, 0, 0, 0.6);
+
+        &:hover {
+            box-shadow: 0 12px 30px -6px rgba(0, 0, 0, 0.7);
+        }
     }
 }
 
