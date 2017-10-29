@@ -1,8 +1,11 @@
 import Rellax from 'rellax';
+import 'slick-carousel';
+import $ from 'jquery';
 
 import '../../styles/app.less';
 
 document.addEventListener('DOMContentLoaded', () => {
+
     const header = document.querySelector('#header');
     const logoImage = document.querySelector('#logo img');
 
@@ -21,4 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
             logoImage.src= 'images/logo.png';
         }
     });
+
+    $('#works-wrapper').slick();
 });
