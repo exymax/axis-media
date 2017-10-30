@@ -287,12 +287,16 @@ html, body {
             height: 365px;
             background-color: transparent;
 
+            .slick-arrow {
+                display: none !important;
+            }
+
             .slick-track {
-                height: 365px;
+                height: 380px;
 
                 .slick-slide {
-                    width: 300px !important;
-                    height: 350px !important;
+                    width: 330px !important;
+                    height: 370px !important;
                     margin-left: 40px !important;
                     background-color: rgb(230, 230, 230);
                     border-radius: 3px;
@@ -300,6 +304,30 @@ html, body {
     
                     &:not(:first-child) {
                         margin-left: 0;
+                    }
+                }
+            }
+
+            .slick-dots {
+                bottom: -55px !important;
+
+                li {
+                    button {
+                        .transition;
+                    }
+
+                    &:hover {
+                        button::before {
+                            color: rgba(255, 255, 255, .8);
+                        }
+                    }
+
+                    &.slick-active {
+
+                        button::before {
+                            font-size: 10px;
+                            color: #fff;
+                        }
                     }
                 }
             }

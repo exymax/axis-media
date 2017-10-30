@@ -25,5 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    $('#works-wrapper').slick();
+    $('#works-wrapper').slick({
+        dots: true,
+        centerMode: true,
+        infinite: true,
+    });
 });
