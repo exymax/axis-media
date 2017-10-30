@@ -30,4 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         centerMode: true,
         infinite: true,
     });
+
+    $('#reviews').slick();
 });
