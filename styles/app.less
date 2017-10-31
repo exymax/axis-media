@@ -95,9 +95,7 @@ html, body {
     }
 
     #hero {
-        position: relative;
         z-index: 4;
-        width: 100%;
         height: 750px;
         overflow: hidden;
 
@@ -153,9 +151,7 @@ html, body {
     }
 
     #about-white-rect {
-        position: relative;
         z-index: 5;
-        width: 100%;
         height: 200px;
 
         #about {
@@ -214,8 +210,6 @@ html, body {
     }
 
     #directions {
-        position: relative;
-        width: 100%;
         height: 700px;
         background-color: @c-block-gray;
 
@@ -253,8 +247,6 @@ html, body {
     }
 
     #works {
-        position: relative;
-        width: 100%;
         height: 600px;
         background-color: @c-block-light-gray;
 
@@ -343,8 +335,6 @@ html, body {
     }
 
     #clients-and-reviews {
-        position: relative;
-        width: 100%;
         height: 600px;
         background-color: @c-block-light;
     
@@ -417,6 +407,95 @@ html, body {
             .client {
                 &:not(:first-child) {
                     margin-left: 80px;
+                }
+            }
+        }
+    }
+
+    #contact-us {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 550px;
+        background-color: @c-block-gray;
+        
+        #contact-stripe {
+            width: 100%;
+            height: 15px;
+            background-color: @c-block-blue;
+        }
+
+        #contact-us-title {
+            margin-top: 50px;
+            text-transform: uppercase;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            letter-spacing: 4px;
+            font-weight: bold;
+            color: @c-text-blue;
+        }
+
+        #contact-us-form {
+            margin-top: 70px;
+            width: 540px;
+
+            form {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                #form-title {
+                    font-size: 30px;
+                    font-weight: bold;
+                    color: @c-text-light;
+                }
+
+                #form-description {
+                    margin-top: 10px;
+                    font-family: 'Times New Roman';
+                    text-align: center;
+                    font-size: 22px;
+                    color: rgb(150, 150, 150);
+                }
+
+                #form-fields-holder {
+                    margin-top: 15px;
+                    display: flex;
+                    flex-direction: row;
+                    width: 100%;
+
+                    #form-left, #form-right {
+                        width: 50%;
+                        flex-grow: 1;
+                        display: flex;
+                        flex-direction: column;
+        
+                        input {
+                            font-family: 'Times New Roman', sans-serif;
+                            font-size: 18px;
+                            padding: 14px 12px;
+                            width: calc(~"100% - 24px");
+                            background-color: @c-block-light;
+                            color: rgb(130, 130, 130);
+                            border: none;
+                            border-radius: 2px;
+
+                            &:last-child {
+                                margin-top: 15px;
+                            }
+                        }
+                    }
+
+                    #form-right {
+                        margin-left: 15px;
+                    }
+                }
+    
+                button {
+                    margin-top: 20px;
+                    .transition;
                 }
             }
         }
