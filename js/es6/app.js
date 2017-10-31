@@ -31,5 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
         infinite: true,
     });
 
-    $('#reviews').slick();
+    $('#reviews').slick({
+        slidesToShow: 3,
+    });
+
+    $('#clients').slick({
+        slidesToShow: 4,
+    });
 });
