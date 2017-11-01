@@ -44,9 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $('#reviews').slick({
         slidesToShow: 3,
+        infinite: true,
     });
 
     $('#clients').slick({
         slidesToShow: 5,
+        infinite: true,
     });
 });
