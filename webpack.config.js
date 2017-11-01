@@ -1,4 +1,5 @@
 var path = require('path');
+var MinifyPlugin = require('babel-minify-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -39,5 +40,8 @@ module.exports = {
 
             {test: /\.(png|jpg)$/, use: 'url-loader?limit=30000'}
         ]
-    }
+    },
+    plugins: [
+        new MinifyPlugin()
+    ]
 };
