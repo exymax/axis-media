@@ -1,0 +1,14 @@
+{
+    "name": "v.levenko/praxis.media",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vladimir Levenko",
+            "email": "exymax@gmail.com"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^6.0"
+    }
+}
