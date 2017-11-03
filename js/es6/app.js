@@ -1,6 +1,7 @@
 import Rellax from 'rellax';
 import scrollToElement from 'scroll-to-element';
 import 'slick-carousel';
+import 'jquery-mousewheel';
 import $ from 'jquery';
 
 import '../../styles/app.less';
@@ -36,19 +37,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    const commonSliderConfig = {
+        infinite: true,
+        slidesToScroll: 3,
+    };
+
     $('#works-wrapper').slick({
         dots: true,
         centerMode: true,
-        infinite: true,
+        ...commonSliderConfig,
     });
 
     $('#reviews').slick({
         slidesToShow: 3,
-        infinite: true,
+        ...commonSliderConfig,
     });
 
     $('#clients').slick({
         slidesToShow: 5,
-        infinite: true,
+        ...commonSliderConfig,
+    });
+
+    $('.slider').on('mousewheel', function (e) {
+        e.preventDefault();
+        $(this).slick(e.deltaY > 0 ? 'slickPrev' : 'slickNext');
     });
 });
