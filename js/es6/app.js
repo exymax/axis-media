@@ -1,7 +1,6 @@
 import Rellax from 'rellax';
-import scrollToElement from 'scroll-to-element';
+import scrollTo from 'animated-scrollto';
 import 'slick-carousel';
-import 'jquery-mousewheel';
 import $ from 'jquery';
 
 import '../../styles/app.less';
@@ -13,11 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.scroll-to'),
     );
 
+    const offsetDefects = {
+        'hero': 0,
+        'about-white-rect': -300,
+        'works': -500,
+        'contact-us': 0,
+    };
+
     scrollToLinks.forEach((link) => {
         link.addEventListener('click', () => {
-            scrollToElement(`#${link.getAttribute('data-scroll-to')}`, {
-                offset: 0,
-            });
+            const scrollToID = link.getAttribute('data-scroll-to');
+            const element = document.querySelector(`#${scrollToID}`);
+            const scrollTop =
+                element.getBoundingClientRect().top - document.body.getBoundingClientRect().top + offsetDefects[scrollToID];
+            scrollTo(document.body, scrollTop, 700);
+            scrollTo(document.documentElement, scrollTop, 700);
         });
     });
 
@@ -27,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         round: true,
     });
 
-    window.addEventListener('scroll', (e) => {
+    window.addEventListener('scroll', () => {
         if (window.scrollY > 20) {
             header.classList.add('colored');
             logoImage.src= 'images/icons/logo-dark.png';
@@ -56,10 +65,5 @@ document.addEventListener('DOMContentLoaded', () => {
     $('#clients').slick({
         slidesToShow: 5,
         ...commonSliderConfig,
-    });
-
-    $('.slider').on('mousewheel', function (e) {
-        e.preventDefault();
-        $(this).slick(e.deltaY > 0 ? 'slickPrev' : 'slickNext');
     });
 });
