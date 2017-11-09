@@ -40,8 +40,8 @@ module.exports = {
 
             {test: /\.(png|jpg)$/, use: 'url-loader?limit=30000'}
         ]
-    },
-    plugins: [
-        new MinifyPlugin()
-    ]
+    }
+    // plugins: [
+    //     new MinifyPlugin()
+    // ]
 };

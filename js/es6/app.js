@@ -1,22 +1,32 @@
 import Rellax from 'rellax';
+import * as Ripple from 'proper-ripple';
 import scrollTo from 'animated-scrollto';
 import 'slick-carousel';
 import $ from 'jquery';
 
 import '../../styles/app.less';
 
+const getElements = (selector) => Array.from(
+    document.querySelectorAll(selector)
+);
+
 document.addEventListener('DOMContentLoaded', () => {
     const header = document.querySelector('#header');
     const logoImage = document.querySelector('#logo img');
-    const scrollToLinks = Array.from(
-        document.querySelectorAll('.scroll-to'),
-    );
+    const scrollToLinks = getElements('.scroll-to');
+    const workSlides = getElements('.work');
 
     const offsetDefects = {
         'hero': 0,
         'about-white-rect': -300,
         'works': -500,
         'contact-us': 0,
+    };
+
+    Ripple.default.watch('.btn.blue');
+    var rippleDark = Ripple.default.watch('.btn:not(.blue)');
+    rippleDark.factory.options = {
+        color: 'rgba(0, 0, 0, .15)',
     };
 
     scrollToLinks.forEach((link) => {
@@ -28,6 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
             scrollTo(document.body, scrollTop, 700);
             scrollTo(document.documentElement, scrollTop, 700);
         });
+    });
+
+    workSlides.forEach((workSlide) => {
+        const sourceURL = workSlide.getAttribute('data-source');
+        
+        if (sourceURL) {
+            workSlide.style.backgroundImage = `url("${sourceURL}")`;
+        }
     });
 
     const parallax = new Rellax('.parallax', {
@@ -53,8 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $('#works-wrapper').slick({
         dots: true,
-        centerMode: true,
-        ...commonSliderConfig,
+        slidesToScroll: 1,
+        slidesToShow: 3,
+        infinite: false,
     });
 
     $('#reviews').slick({

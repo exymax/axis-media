@@ -161,6 +161,7 @@ html, body {
             position: absolute;
             z-index: 2;
             width: 500px;
+            top: 45%;
 
             #hero-text {
                 position: relative;
@@ -337,6 +338,7 @@ html, body {
                 height: 615px;
 
                 .slick-slide {
+                    overflow: hidden;
                     width: 500px !important;
                     height: 590px !important;
                     margin-left: 40px !important;
@@ -346,6 +348,16 @@ html, body {
     
                     &:not(:first-child) {
                         margin-left: 0;
+                    }
+
+                    .work {
+                        height: 590px;
+                        background-size: cover;
+
+                    }
+
+                    &:last-child {
+                        display: none;
                     }
                 }
             }

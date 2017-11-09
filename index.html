@@ -14,10 +14,10 @@
             </div>
             <div id="links">
                 <ul id="links-list">
-                    <li class="links-list-item scroll-to" data-scroll-to="hero"><a href="#">home</a></li>
-                    <li class="links-list-item scroll-to" data-scroll-to="about-white-rect"><a href="#">about</a></li>
-                    <li class="links-list-item scroll-to" data-scroll-to="works"><a href="#">works</a></li>
-                    <li class="links-list-item scroll-to" data-scroll-to="contact-us"><a href="#">contact</a></li>
+                    <li class="links-list-item scroll-to" data-scroll-to="hero"><a href="#">домашняя</a></li>
+                    <li class="links-list-item scroll-to" data-scroll-to="about-white-rect"><a href="#">о нас</a></li>
+                    <li class="links-list-item scroll-to" data-scroll-to="works"><a href="#">работы</a></li>
+                    <li class="links-list-item scroll-to" data-scroll-to="contact-us"><a href="#">контакты</a></li>
                 </ul>
             </div>
             <div id="social">
@@ -30,26 +30,27 @@
         </div>
         <div id="hero" class="page-block">
             <div id="hero-fader"></div>
-            <img class="parallax" src="images/hero/background.jpeg" />
+            <img class="parallax" src="images/hero/main.jpg" />
             <div class="content centered centered-inside-col">
                 <span id="hero-text">
-                    <div class="text-container">Turning your dreams into live pixels</div>
+                    <div class="text-container">Лучшее IT-решение для Вашего бизнеса</div>
                 </span>
-                <button class="btn large shadow" id="purchase">Purchase now</button>
+                <button class="btn large shadow" id="purchase">Заказать</button>
             </div>
         </div>
 
         <div id="about-white-rect" class="page-block">
             <div id="about">
                 <div id="text-about">
-                    about
+                    о нас
                 </div>
                 <div id="about-description">
                     <div id="left">
-                        We develop digital strategies, products and services.                        
+                        Мы создаем продвинутые digital продукты для бизнеса                         
                     </div>
                     <div id="right">
-                        Praxis Media is a creative agency that specializes in web & android development, design, architecture and innovative technology.
+                        Praxis Media - это креативное агенство, специализирующееся 
+                        в веб и андроид-разработке, дизайне, архитектуре и инновационных технологиях.
                     </div>
                 </div>
             </div>
@@ -59,71 +60,53 @@
             <div id="directions-wrapper">
                 <div class="direction">
                     <img class="image" src="images/icons/web-development.svg">
-                    <span class="description">Web Development</span>
+                    <span class="description">Веб-разработка</span>
                 </div>
                 <div class="direction">
                     <img class="image" src="images/icons/android-development.svg">
-                    <span class="description">Android Development</span>
+                    <span class="description">Андроид-разработка</span>
                 </div>
                 <div class="direction">
                     <img class="image" src="images/icons/visualization.svg">
-                    <span class="description">Architectural Visualization</span>
+                    <span class="description">Архитектурная визуализация</span>
                 </div>
                 <div class="direction">
                     <img class="image" src="images/icons/design.svg">
-                    <span class="description">Design</span>
+                    <span class="description">Дизайн</span>
                 </div>
             </div>
         </div>
 
         <div id="works" class="page-block">
             <div id="works-rectangle">
-                <div id="works-rect-title">works</div>
+                <div id="works-rect-title">работы</div>
             </div>
 
             <div id="works-wrapper" class="slider">
-                <div class="work">
+                <div class="work" data-source="images/visualizations/1.png">
+                </div>
 
+                <div class="work" data-source="images/visualizations/2.png">
+                </div>
+
+                <div class="work" data-source="images/visualizations/3.png">
+                </div>
+
+                <div class="work" data-source="images/visualizations/4.png">
+                </div>
+
+                <div class="work" data-source="images/visualizations/5.png">
                 </div>
 
                 <div class="work">
-                    
-                </div>
-
-                <div class="work">
-                    
-                </div>
-
-                <div class="work">
-                    
-                </div>
-
-                <div class="work">
-                    
-                </div>
-
-                <div class="work">
-                    
-                </div>
-
-                <div class="work">
-                    
-                </div>
-
-                <div class="work">
-                    
-                </div>
-
-                <div class="work">
-                    
                 </div>
             </div>
 
-            <button id="btn-portfolio" class="btn large blue shadow">portfolio</button>
+            <button id="btn-portfolio" class="btn large blue shadow">открыть портфолио</button>
         </div>
 
         <div id="clients-and-reviews" class="page-block">
-            <div id="reviews-title">reviews</div>
+            <div id="reviews-title">отзывы</div>
 
             <div id="reviews" class="slider">
                 <div class="review">
@@ -193,26 +176,26 @@
         <div id="contact-us" class="page-block">
             <div id="contact-stripe"></div>
 
-            <div id="contact-us-title">contact us</div>
+            <div id="contact-us-title">связаться с нами</div>
 
             <div id="contact-us-form">
                 <form method="post" action="mail.php">
-                    <div id="form-title">Write your message</div>
+                    <div id="form-title">Напишите Ваше сообщение</div>
                     <div id="form-description">
-                        We appreciate all the messages we receive. You'll get the feedback as fast as possible
+                        Мы ценим каждое сообщение, которое Вы присылаете и постараемся ответить на него максимально быстро :)
                     </div>
                     <div id="form-fields-holder">
                         <div id="form-left">
-                            <input placeholder="Full Name" id="form-fullname" name="fullname">
+                            <input placeholder="Ваше имя" id="form-fullname" name="fullname">
                             <input placeholder="E-mail" id="form-email" name="email">
                         </div>
                         <div id="form-right">
-                            <input placeholder="Your Company" id="form-company" name="company">
-                            <input placeholder="Your Phone" id="form-phone" name="phone">
+                            <input placeholder="Ваша компания" id="form-company" name="company">
+                            <input placeholder="Номер Вашего телефона" id="form-phone" name="phone">
                         </div>
                     </div>
 
-                    <button id="submit-message" class="btn large shadow blue" type="submit">submit request</button>
+                    <button id="submit-message" class="btn large shadow blue" type="submit">отправить</button>
                 </form>
             </div>
         </div>
