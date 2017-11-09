@@ -39,25 +39,22 @@ if (isset($_POST['send_mail']) && isMailDataValid($_POST, $validationRules)) {
     try {
         $mail->SMTPDebug = 2;
         $mail->isSMTP();
-        $mail->Host = 'smtp1.example.com;smtp2.example.com';
+        $mail->Host = 'smtp.gmail.com	';
         $mail->SMTPAuth = true;
-        $mail->Username = 'user@example.com';
-        $mail->Password = 'secret';
+        $mail->Username = 'exymax@gmail.com';
+        $mail->Password = 'techsingulariop123';
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 
         //Recipients
-        $mail->setFrom('from@example.com', 'Mailer');
-        $mail->addAddress('joe@example.net', 'Joe User');
-        $mail->addAddress('ellen@example.com');
-        $mail->addReplyTo('info@example.com', 'Information');
+        $mail->setFrom($_POST['email'], $_POST['fullname']);
+        $mail->addAddress('praxis.media.studio@gmail.com');
         $mail->addCC('cc@example.com');
-        $mail->addBCC('bcc@example.com');
 
         //Content
         $mail->isHTML();
-        $mail->Subject = 'Here is the subject';
-        $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
+        $mail->Subject = 'Сообщение с сайта';
+        $mail->Body    = 'Поступило сообщение от';
         $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
         $mail->send();
